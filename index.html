@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+		<title>Learn Game Development at ZENVA.com</title>
+		<script type="text/javascript" src="z/phaser.min.js"></script>
+		<style>
+		  body {
+		    padding: 0px;
+		    margin: 0px;
+		  }
+		  </style>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+			//Fix 1 số giá trị tĩnh trên local
+			var Cf = function(){};
+			Cf.loadScript = function()
+			{
+				console.log('Khởi tạo bộ câu hỏi');
+			}
+			Cf.next = function(){
+				console.log('Hiển thị câu hỏi');
+			}
+			Cf.popup = 0;
+			Cf.resq = -1;
+			Cf.waiting = 0;
+		</script>
+		<!-- Đoạn code này sẽ được thay thế bằng đoạn code tương ứng trên host -->
+		<script src="Mario/js/main.js"></script>
+	</body>
+</html>
