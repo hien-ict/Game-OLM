@@ -43,6 +43,8 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.stage.backgroundColor = '#5C94FC';
 
+
+
     map = game.add.tilemap('objects');
     map.addTilesetImage('items', 'tiles');
     layer = map.createLayer('background');
