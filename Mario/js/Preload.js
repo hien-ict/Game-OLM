@@ -3,7 +3,9 @@ var Preload = {
         this.load.tilemap('map1-1', 'Mario/assets/map1-1.json', null,Phaser.Tilemap.TILED_JSON);
 
         this.load.image('tiles', 'Mario/assets/items2.png');
-        this.load.image('finish', 'Mario/assets/finish.png');
+        this.load.image('cot', 'Mario/assets/cot.png');
+        this.load.image('co', 'Mario/assets/co.png');
+
 
         this.load.spritesheet('mario', 'Mario/assets/marioSmall.png', 34, 34, 7);
         this.load.spritesheet('goomba', 'Mario/assets/goomba.png', 16, 16, 3);

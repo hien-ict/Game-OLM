@@ -1,4 +1,5 @@
 var state = 'live';
+var death = null;
 var self = State1_1 = {
     create: function () {
         this.stage.backgroundColor = '#5C94FC';
@@ -41,6 +42,15 @@ var self = State1_1 = {
         this.map.createFromTiles(14, null, 'question', 'question', this.questions);
         this.questions.callAll('animations.add', 'animations', 'spin', [0, 0, 1, 2, 3, 4, 5], 4, true);
 
+        this.mario.x = 3050;
+        this.cot = game.add.group();
+        this.cot.enableBody = true;
+        this.map.createFromTiles(17, null, 'cot', 'finish', this.cot);
+
+        this.co = game.add.group();
+        this.co.enableBody = true;
+        this.map.createFromTiles(9, null, 'co', 'finish', this.co);
+
         this.music = game.add.audio('music');
         this.jump = game.add.audio('jump');
         this.mariodie = game.add.audio('mariodie');
@@ -62,6 +72,7 @@ var self = State1_1 = {
         if (this.mario.y > 240 && state == 'live') {
             this.mario.frame = 1;
             this.mario.body.enable = false;
+            this.mario.animations.stop();
             state = 'die';
         };
         this.loadQuestion();
@@ -69,17 +80,20 @@ var self = State1_1 = {
 
         this.game.physics.arcade.collide(this.mario, this.layer);
         this.game.physics.arcade.collide(this.goombas, this.layer);
+        this.game.physics.arcade.collide(this.cot, this.layer);
+        this.game.physics.arcade.collide(this.co, this.layer);
 
 
         this.walk(this.mario, 'live');
 
         this.goombas.forEach(this.moveGoomba, this, true, 128, this.mario);
         this.questions.forEach(this.playQuestion, this, true, 128, this.mario, this);
-
         if (state == 'live') {
             this.game.physics.arcade.overlap(this.mario, this.goombas, this.kill);
             this.game.physics.arcade.overlap(this.mario, this.questions, this.showQuestion);
-        }
+            this.game.physics.arcade.collide(this.mario, this.cot, this.win);
+        };
+        if (this.death && !this.death.done) this.death.next();
 
     },
 
@@ -221,16 +235,31 @@ var self = State1_1 = {
 
     },
 
+    fiberDeath: function* (player) {
+        timer = 0;
+        while (timer < 5 * 60) {
+            timer++;
+            yield
+        };
+        self.music.resume();
+        self.mariodie.stop();
+        player.frame = 0;
+        player.x -= 25;
+        player.y = 50
+        console.log(health);;
+        health -= 1;
+        player.body.enable = true;
+        state = 'live';
+        this.death = null;
+    },
+
     checkState: function (player) {
         if (state == 'die' && health > 0) {
-            state = 'live';
+            self.music.pause();
+            self.mariodie.play();
+            state = 'waiting';
+            this.death = this.death || this.fiberDeath(player);
 
-            health -= 1;
-            console.log(health);
-
-            player.x -=20;
-            player.y =50;
-            player.body.enable = true;
         } else {
             if (state == 'die' && health == 0) {
                 state = 'finish';
@@ -247,15 +276,35 @@ var self = State1_1 = {
 
     printMessage: function (msg, size, x, y) {
         var style = {
-            font: "bold" + (size) + "pt Arial",
+            font: "bold " + (size) + "pt Arial",
             fill: "#ffffff",
             align: "center",
             stroke: "#258acc",
             strokeThickness: 8
         };
-        x1 = x || this.mario.x;
+        x1 = x || this.game.world.centerX;
         y1 = y || 128;
-        s = game.add.text(this.mario.x, 128, msg, style);
-        s.anchor.setTo(0.5);
+        s = game.add.text(x1, y1, msg, style);
+        s.anchor.setTo(0.5, 0.5);
+    },
+
+    win: function (player, cot) {
+        self.music.stop();
+        self.mariowin.play();
+        self.printMessage("  WIN", 15);
+
+        state = 'win';
+        player.body.velocity.x = 0;
+
+
+        self.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+            player.body.velocity.x = 25;
+            console.log(state);
+        });
+
+        self.game.time.events.add(Phaser.Timer.SECOND * 5.3, function () {
+            player.kill();
+            game.paused = true;
+        });
     }
 }
