@@ -1,11 +1,14 @@
 var round;
 var Preload = {
-    preload: function(){
-        this.load.tilemap('map1-1', 'Mario/assets/map1-1.json', null,Phaser.Tilemap.TILED_JSON);
+    preload: function () {
+        this.load.tilemap('map1-1', 'Mario/assets/map1-1.json', null, Phaser.Tilemap.TILED_JSON);
+        this.load.tilemap('map1-2', 'Mario/assets/map1-2.json', null, Phaser.Tilemap.TILED_JSON);
 
         this.load.image('tiles', 'Mario/assets/items2.png');
+        this.load.image('tiles2', 'Mario/assets/items3.png');
         this.load.image('cot', 'Mario/assets/cot.png');
         this.load.image('co', 'Mario/assets/co.png');
+        this.load.image('cau', 'Mario/assets/cau.png');
         this.load.image('health', 'Mario/assets/health.png');
 
 
@@ -14,6 +17,7 @@ var Preload = {
         this.load.spritesheet('question', 'Mario/assets/question.png', 16, 17, 7);
 
         this.load.audio('music', 'Mario/assets/music.mp3');
+        this.load.audio('music2', 'Mario/assets/Underworld.mp3');
         this.load.audio('jump', 'Mario/assets/smb_jump-super.mp3');
         this.load.audio('mariodie', 'Mario/assets/smb_mariodie.mp3');
         this.load.audio('mariowin', 'Mario/assets/smb_stage_clear.mp3');
@@ -21,7 +25,7 @@ var Preload = {
         this.load.audio('kick', 'Mario/assets/smb_bump.wav');
     },
 
-    create: function(){
+    create: function () {
 
         Cf.loadScript();
 
@@ -38,7 +42,7 @@ var Preload = {
         this.runButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
     },
 
-    walk: function ( player, state1) {
+    walk: function (player, state1) {
         if (player.body.enable && state == state1) {
 
             if (this.cursors.left.isDown) {
@@ -100,7 +104,7 @@ var Preload = {
                 round.jump.play();
             }
 
-            if (player.body.velocity.y != 0) {
+            if (!player.body.onFloor()) {
                 if (player.y < 224) {
                     player.frame = 6;
                 } else {
@@ -137,6 +141,16 @@ var Preload = {
         }
     },
 
+    moveBrige: function (child, arg, player) {
+        if (child.x - player.x < arg && child.body.velocity.y == 0) {
+            child.body.velocity.y = -20;
+        }
+        if( child.y<=0){
+            child.y=256;
+        }
+
+    },
+
     playQuestion: function (child, arg, player) {
         if (child.x - player.x < arg && child.body.enable) {
             child.animations.play('spin');
@@ -150,7 +164,7 @@ var Preload = {
             goomba.body.enable = false;
             player.body.velocity.y = -80;
             round.kick.play();
-            score+=2;
+            score += 2;
             Preload.updateScore();
             round.game.time.events.add(Phaser.Timer.SECOND, function () {
                 goomba.kill();
@@ -187,21 +201,24 @@ var Preload = {
         round.music.resume();
         round.mariodie.stop();
         player.frame = 0;
-        player.x -= 25;
+        player.x -= 35;
         player.y = 50
         console.log(health);;
         health -= 1;
         player.body.enable = true;
         state = 'live';
-        State1_1.death = null;
-        this.printHealth();
+        round.death = null;
+        this.updateHealth();
     },
 
-    checkState: function ( player) {
-        if (round.music.currentTime > 29000 && state == 'live') {
-            round.music.stop();
-            round.music.play();
-        };
+    checkState: function (player) {
+        if (state =='win' && counter>0){
+            score++;
+            counter--;
+            Preload.updateTime();
+            Preload.updateScore();
+        }
+
         if (player.y > 240 && state == 'live') {
             player.frame = 1;
             player.body.enable = false;
@@ -213,13 +230,13 @@ var Preload = {
             round.music.pause();
             round.mariodie.play();
             state = 'waiting';
-            State1_1.death = State1_1.death || Preload.fiberDeath(player);
+            round.death = round.death || Preload.fiberDeath(player);
 
         } else {
             if (state == 'die' && health == 0) {
                 state = 'finish';
-                this.music.stop();
-                this.mariodie.play();
+                round.music.stop();
+                round.mariodie.play();
                 this.printMessage("GAME OVER!", 15);
                 round.game.time.events.add(Phaser.Timer.SECOND * 5, function () {
                     round.game.paused = true;
@@ -237,7 +254,7 @@ var Preload = {
             stroke: "#258acc",
             strokeThickness: 8
         };
-        x1 = x || State1_1.mario.x;
+        x1 = x || round.mario.x;
         y1 = y || 128;
         s = game.add.text(x1, y1, msg, style);
         s.anchor.setTo(0.5, 0.5);
@@ -248,13 +265,17 @@ var Preload = {
             font: "bold " + (10) + "pt Arial",
             fill: "#ff0000",
             align: "center",
-            stroke: "#000000",
-            //strokeThickness: 1
-            backgroundColor: '#5C94FC'
+            stroke: "#ff0000",
+            strokeThickness: 0.2
+            //backgroundColor: '#5C94FC'
         };
         this.health = game.add.text(40, 22, ' x ' + health, style);
         this.health.anchor.setTo(0.5);
         this.health.fixedToCamera = true;
+    },
+
+    updateHealth() {
+        this.health.setText(' x ' + health);
     },
 
     printTime() {
@@ -268,11 +289,13 @@ var Preload = {
     },
 
     updateTime() {
-        counter--;
+        if (state != 'win'){
+            counter--;
+        }
         Preload.text.setText('Time: ' + counter);
     },
 
-    printScore(){
+    printScore() {
         this.score = game.add.text(128, 22, 'Score: 0', {
             font: "12px Arial",
             fill: "#00ff00",
@@ -293,27 +316,34 @@ var Preload = {
         game.camera.follow(cot);
         state = 'win';
         player.body.velocity.x = 0;
-
+//        score += counter;
+//        Preload.updateScore();
 
         round.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+            player.animations.play('walk');
             player.body.velocity.x = 25;
         });
 
         round.game.time.events.add(Phaser.Timer.SECOND * 5.3, function () {
             player.kill();
-            round.game.paused = true;
+            //round.game.paused = true;
+        });
+        round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
+            game.state.start('State1_2');
         });
     },
 
-    win2: function ( player, co) {
+    win2: function (player, co) {
         if (flag == 1) {
-            round.co.setAll('body.gravity.y', 400);
-            round.mario.body.gravity.y = 100;
+            player.x+=5;
+            round.co.setAll('body.gravity.y', 700);
+            //round.mario.body.gravity.y = 100;
             health += 1;
             flag = 0;
-            Preload.printHealth();
+            Preload.updateHealth();
             //state='win';
         }
 
     }
+
 }

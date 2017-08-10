@@ -1,14 +1,12 @@
-var state = 'live',
-    flag = 1, counter, score = 0;
-var death = null;
-var State1_1 = {
+var State1_2 = {
     create: function () {
-        round = State1_1;
-        counter = 300
-        this.stage.backgroundColor = '#5C94FC';
+        round = State1_2;
+        counter = 500;
+        state = 'live';
+        this.stage.backgroundColor = '#222222';
 
-        this.map = game.add.tilemap('map1-1');
-        this.map.addTilesetImage('items', 'tiles');
+        this.map = game.add.tilemap('map1-2');
+        this.map.addTilesetImage('items', 'tiles2');
 
         this.layer = this.map.createLayer('background');
         this.layer.resizeWorld();
@@ -18,6 +16,7 @@ var State1_1 = {
         this.map.setCollisionBetween(27, 28);
         this.map.setCollisionByIndex(13);
         this.map.setCollisionByIndex(5);
+        this.map.setCollisionByIndex(24);
         this.map.setCollisionByIndex(40);
 
         this.mario = game.add.sprite(50, 50, 'mario');
@@ -46,17 +45,13 @@ var State1_1 = {
         this.map.createFromTiles(14, null, 'question', 'question', this.questions);
         this.questions.callAll('animations.add', 'animations', 'spin', [0, 0, 1, 2, 3, 4, 5], 4, true);
 
-        this.cot = game.add.group();
-        this.cot.enableBody = true;
-        this.map.createFromTiles(17, null, 'cot', 'finish', this.cot);
-        this.cot.x+=7;
+        this.briges = game.add.group();
+        this.briges.enableBody = true;
+        this.map.createFromTiles(5, null, 'cau', 'goomba', this.briges);
+        this.briges.setAll('body.immovable' , true);
 
-        this.co = game.add.group();
-        this.co.enableBody = true;
-        this.map.createFromTiles(9, null, 'co', 'finish', this.co);
-        this.co.x+=8;
 
-        this.music = game.add.audio('music');
+        this.music = game.add.audio('music2');
         this.jump = game.add.audio('jump');
         this.mariodie = game.add.audio('mariodie');
         this.mariowin = game.add.audio('mariowin');
@@ -75,34 +70,36 @@ var State1_1 = {
 
         this.game.camera.follow(this.mario);
 
-        this.mario.x = 3050;
+        this.mario.x = 2000;
     },
 
     update: function () {
-        if (round.music.currentTime > 29000 && state == 'live') {
+
+        if (round.music.currentTime > 12000 && state == 'live') {
             round.music.stop();
             round.music.play();
         };
-
 
         Preload.loadQuestion();
         Preload.checkState(this.mario);
 
         this.game.physics.arcade.collide(this.mario, this.layer);
         this.game.physics.arcade.collide(this.goombas, this.layer);
-        this.game.physics.arcade.collide(this.cot, this.layer);
-        this.game.physics.arcade.collide(this.co, this.layer);
+        this.game.physics.arcade.collide(this.mario, this.briges,function(){
+            //round.mario.body.onFloor() = true;
+            round.mario.body.blocked.down = true;
+        });
 
 
         Preload.walk(this.mario, 'live');
 
+        this.briges.forEach(Preload.moveBrige, this, true,128, this.mario);
         this.goombas.forEach(Preload.moveGoomba, this, true, 128, this.mario);
         this.questions.forEach(Preload.playQuestion, this, true, 128, this.mario);
         if (state == 'live') {
             this.game.physics.arcade.overlap(this.mario, this.goombas, Preload.kill);
             this.game.physics.arcade.overlap(this.mario, this.questions, Preload.showQuestion);
-            this.game.physics.arcade.overlap(this.mario, this.cot, Preload.win);
-            this.game.physics.arcade.overlap(this.mario, this.co, Preload.win2);
+
         };
         if (this.death && !this.death.done) this.death.next();
 
