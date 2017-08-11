@@ -2,7 +2,7 @@ var State1_2 = {
     create: function () {
         round = State1_2;
         counter = 500;
-        state = 'live';
+        state = 'new';
         this.stage.backgroundColor = '#222222';
 
         this.map = game.add.tilemap('map1-2');
@@ -74,6 +74,16 @@ var State1_2 = {
     },
 
     update: function () {
+
+        if (state == 'new') {
+            text = 'ROUND 2'
+            Preload.printMessage(text,15);
+            round.game.time.events.add(Phaser.Timer.SECOND *2, function () {
+
+                state = 'live';
+
+            });
+        }
 
         if (round.music.currentTime > 12000 && state == 'live') {
             round.music.stop();

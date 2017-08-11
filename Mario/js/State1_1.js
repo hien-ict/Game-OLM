@@ -1,5 +1,6 @@
-var state,
-    flag = 1, counter, score = 0;
+var state,text,
+    flag = 1,
+    counter, score = 0;
 var death = null;
 var State1_1 = {
     create: function () {
@@ -50,12 +51,12 @@ var State1_1 = {
         this.cot = game.add.group();
         this.cot.enableBody = true;
         this.map.createFromTiles(17, null, 'cot', 'finish', this.cot);
-        this.cot.x+=7;
+        this.cot.x += 7;
 
         this.co = game.add.group();
         this.co.enableBody = true;
         this.map.createFromTiles(9, null, 'co', 'finish', this.co);
-        this.co.x+=8;
+        this.co.x += 8;
 
         this.music = game.add.audio('music');
         this.jump = game.add.audio('jump');
@@ -80,6 +81,16 @@ var State1_1 = {
     },
 
     update: function () {
+        if (state == 'new') {
+            text = 'ROUND 1'
+            Preload.printMessage(text,15);
+            round.game.time.events.add(Phaser.Timer.SECOND *2, function () {
+
+                state = 'live';
+
+            });
+        }
+
         if (round.music.currentTime > 29000 && state == 'live') {
             round.music.stop();
             round.music.play();

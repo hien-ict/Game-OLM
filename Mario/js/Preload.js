@@ -10,6 +10,7 @@ var Preload = {
         this.load.image('co', 'Mario/assets/co.png');
         this.load.image('cau', 'Mario/assets/cau.png');
         this.load.image('health', 'Mario/assets/health.png');
+        this.load.image('finish', 'Mario/assets/finish.png');
 
 
         this.load.spritesheet('mario', 'Mario/assets/marioSmall.png', 34, 34, 7);
@@ -256,8 +257,14 @@ var Preload = {
         };
         x1 = x || round.mario.x;
         y1 = y || 128;
-        s = game.add.text(x1, y1, msg, style);
-        s.anchor.setTo(0.5, 0.5);
+        this.msg = game.add.text(x1, y1, msg, style);
+        this.msg.anchor.setTo(0.5, 0.5);
+
+    },
+
+    updateMessage(msg) {
+
+        this.msg.setText(msg);
     },
 
     printHealth() {
@@ -289,7 +296,7 @@ var Preload = {
     },
 
     updateTime() {
-        if (state != 'win'){
+        if (state != 'win' ){
             counter--;
         }
         Preload.text.setText('Time: ' + counter);
