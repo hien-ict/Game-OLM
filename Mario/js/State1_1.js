@@ -1,10 +1,11 @@
-var state = 'live',
+var state,
     flag = 1, counter, score = 0;
 var death = null;
 var State1_1 = {
     create: function () {
         round = State1_1;
-        counter = 300
+        counter = 300;
+        state = 'new';
         this.stage.backgroundColor = '#5C94FC';
 
         this.map = game.add.tilemap('map1-1');
