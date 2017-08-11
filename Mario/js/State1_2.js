@@ -50,6 +50,11 @@ var State1_2 = {
         this.map.createFromTiles(5, null, 'cau', 'goomba', this.briges);
         this.briges.setAll('body.immovable' , true);
 
+        this.finish = game.add.group();
+        this.finish.enableBody = true;
+        this.map.createFromTiles(27, null, 'finish', 'finish', this.finish);
+        this.finish.setAll('body.immovable' , true);
+
 
         this.music = game.add.audio('music2');
         this.jump = game.add.audio('jump');
@@ -70,7 +75,7 @@ var State1_2 = {
 
         this.game.camera.follow(this.mario);
 
-        this.mario.x = 2000;
+//        this.mario.x = 2000;
     },
 
     update: function () {
@@ -109,6 +114,7 @@ var State1_2 = {
         if (state == 'live') {
             this.game.physics.arcade.overlap(this.mario, this.goombas, Preload.kill);
             this.game.physics.arcade.overlap(this.mario, this.questions, Preload.showQuestion);
+            this.game.physics.arcade.overlap(this.mario, this.finish, Preload.win);
 
         };
         if (this.death && !this.death.done) this.death.next();

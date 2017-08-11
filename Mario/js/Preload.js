@@ -1,4 +1,4 @@
-var round;
+var round, next =1;
 var Preload = {
     preload: function () {
         this.load.tilemap('map1-1', 'Mario/assets/map1-1.json', null, Phaser.Tilemap.TILED_JSON);
@@ -336,7 +336,8 @@ var Preload = {
             //round.game.paused = true;
         });
         round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
-            game.state.start('State1_2');
+            next+=1;
+            game.state.start('State1_'+next);
         });
     },
 
