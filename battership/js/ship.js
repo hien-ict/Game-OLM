@@ -1,4 +1,4 @@
-																				var height = window.innerHeight - 20;
+var height = window.innerHeight - 20;
 var width = height / 1.6,
     scale = height / 720;
 var state, music, bg1, bg2, scrollSpeed = 12,
@@ -64,31 +64,27 @@ var self = GameState = {
     },
 
     update: function () {
-      	if(Cf.popup == 1) Cf.waiting = 1;
-		if(Cf.waiting == 1)
-		{
-          	game.pause= true;
-			if(Cf.resq == 1)
-			{
-				Cf.waiting = 0;
-				Cf.resq = -1;
-              	//this.player.customParams.chkOverlap = 0;
-				console.log(true);
-              	state='waiting';
-              	state2='new';
-              	game.pause=false;
-			}
-			else if(Cf.resq == 0)
-			{
-				Cf.waiting = 0;
-				Cf.resq = -1;
-              	//this.player.customParams.chkOverlap = 0;
-				console.log(false);
-              	//state='waiting';
-              	//state2='waiting';
-              	Cf.next();
-			}
-		}
+        if (Cf.popup == 1) Cf.waiting = 1;
+        if (Cf.waiting == 1) {
+            game.pause = true;
+            if (Cf.resq == 1) {
+                Cf.waiting = 0;
+                Cf.resq = -1;
+                //this.player.customParams.chkOverlap = 0;
+                console.log(true);
+                state = 'waiting';
+                state2 = 'new';
+                game.pause = false;
+            } else if (Cf.resq == 0) {
+                Cf.waiting = 0;
+                Cf.resq = -1;
+                //this.player.customParams.chkOverlap = 0;
+                console.log(false);
+                //state='waiting';
+                //state2='waiting';
+                Cf.next();
+            }
+        }
         if (music.currentTime > 133000) {
             music.stop();
             this.playMusic(this.getMusicCookie() == 'on');
@@ -197,7 +193,7 @@ var self = GameState = {
         return explosion;
     },
 
-    createTing: function() {
+    createTing: function () {
         starting = game.add.sprite(-width, -height, 'star');
         starting.animations.add('ting');
         starting.anchor.x = 0.5;
@@ -311,8 +307,8 @@ var self = GameState = {
             actor.starting.animations.play('ting', 12, false);
             star.y += 200;
             Cf.next();
-          	state='show';
-          	state2='show';
+            state = 'show';
+            state2 = 'show';
         }
 
     },
@@ -367,7 +363,7 @@ var self = GameState = {
             }
         } else if (state2 == 'star') {
             this.star.body.velocity.y += 1;
-			//this.star.body.velocity.x += 1;
+            //this.star.body.velocity.x += 1;
             this.star.angle += (2 * rot);
 
             if (this.star.y > 3000 * Math.random() * height + this.star.height) {
