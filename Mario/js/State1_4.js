@@ -27,7 +27,7 @@ var State1_4 = {
         };
         this.text = game.add.text(70, 128, 'CLICK TO START', style2);
         if (this.message) {
-            this.text = game.add.text(20, 10, this.message, style);
+            this.text = game.add.text(20, 20, this.message, style);
         }
         //this.text.anchor.setTo(0.5);
     }

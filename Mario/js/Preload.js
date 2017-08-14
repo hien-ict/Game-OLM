@@ -215,7 +215,6 @@ var Preload = {
         player.frame = 0;
         player.x -= 35;
         player.y = 50
-        console.log(health);;
         health -= 1;
         player.body.enable = true;
         state = 'live';
@@ -250,8 +249,9 @@ var Preload = {
                 round.music.stop();
                 round.mariodie.play();
                 this.printMessage("GAME OVER!", 15);
+
                 round.game.time.events.add(Phaser.Timer.SECOND * 5, function () {
-                    round.game.paused = true;
+                    game.state.start('State1_4',true, false,'BẠN ĐÃ DỪNG CUỘC CHƠI\nĐiểm của bạn là: '+score);
                 });
             }
 
