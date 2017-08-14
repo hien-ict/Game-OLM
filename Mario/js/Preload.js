@@ -1,4 +1,4 @@
-var round, next =1;
+var round, next = 1;
 var Preload = {
     preload: function () {
         this.load.tilemap('map1-1', 'Mario/assets/map1-1.json', null, Phaser.Tilemap.TILED_JSON);
@@ -144,12 +144,11 @@ var Preload = {
         if (child.x - player.x < arg && child.body.velocity.x == 0) {
             child.body.velocity.x = -20;
         }
-        if (child.body.velocity.x > 0){
+        if (child.body.velocity.x > 0) {
 
-            child.scale.setTo(-1,1);
-        }
-        else{
-            child.scale.setTo(1,1);
+            child.scale.setTo(-1, 1);
+        } else {
+            child.scale.setTo(1, 1);
         }
     },
 
@@ -157,8 +156,8 @@ var Preload = {
         if (child.x - player.x < arg && child.body.velocity.y == 0) {
             child.body.velocity.y = -20;
         }
-        if( child.y<=0){
-            child.y=256;
+        if (child.y <= 0) {
+            child.y = 256;
         }
 
     },
@@ -224,7 +223,7 @@ var Preload = {
     },
 
     checkState: function (player) {
-        if (state =='win' && counter>0){
+        if (state == 'win' && counter > 0) {
             score++;
             counter--;
             Preload.updateTime();
@@ -307,7 +306,7 @@ var Preload = {
     },
 
     updateTime() {
-        if (state != 'win' ){
+        if (state != 'win') {
             counter--;
         }
         Preload.text.setText('Time: ' + counter);
@@ -334,8 +333,8 @@ var Preload = {
         game.camera.follow(cot);
         state = 'win';
         player.body.velocity.x = 0;
-//        score += counter;
-//        Preload.updateScore();
+        //        score += counter;
+        //        Preload.updateScore();
 
         round.game.time.events.add(Phaser.Timer.SECOND * 1, function () {
             player.animations.play('walk');
@@ -347,14 +346,14 @@ var Preload = {
             //round.game.paused = true;
         });
         round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
-            next+=1;
-            game.state.start('State1_'+next);
+            next += 1;
+            game.state.start('State1_' + next);
         });
     },
 
     win2: function (player, co) {
         if (flag == 1) {
-            player.x+=5;
+            player.x += 5;
             round.co.setAll('body.gravity.y', 700);
             //round.mario.body.gravity.y = 100;
             health += 1;
