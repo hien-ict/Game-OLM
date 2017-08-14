@@ -84,9 +84,8 @@ var State1_3 = {
         this.music.play();
 
         Preload.printScore();
-        this.health = game.add.sprite(20, 20, 'health');
-        this.health.fixedToCamera = true;
-        this.health.anchor.setTo(0.5);
+        Preload.updateScore();
+
         Preload.printHealth();
 
         Preload.printTime();

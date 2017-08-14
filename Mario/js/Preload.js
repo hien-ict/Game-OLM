@@ -12,6 +12,7 @@ var Preload = {
         this.load.image('cau', 'Mario/assets/cau.png');
         this.load.image('health', 'Mario/assets/health.png');
         this.load.image('finish', 'Mario/assets/finish.png');
+        this.load.image('background', 'Mario/assets/background.png');
 
 
         this.load.spritesheet('mario', 'Mario/assets/marioSmall.png', 34, 34, 7);
@@ -40,7 +41,7 @@ var Preload = {
         this.scale.pageAlignVertically = true;
 
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.state.start('State1_1');
+        this.state.start('State1_4');
 
         this.cursors = game.input.keyboard.createCursorKeys();
         this.runButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -278,6 +279,9 @@ var Preload = {
     },
 
     printHealth() {
+        this.health = game.add.sprite(20, 20, 'health');
+        this.health.fixedToCamera = true;
+        this.health.anchor.setTo(0.5);
         var style = {
             font: "bold " + (10) + "pt Arial",
             fill: "#ff0000",
@@ -350,11 +354,20 @@ var Preload = {
             player.kill();
             //round.game.paused = true;
         });
-        round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
+        if (round==State1_3){
+            round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
+
+
+            game.state.start('State1_' + next,true, false,'CHÚC MỪNG BẠN ĐÃ THẮNG\nĐiểm của bạn là: '+score);
+        });
+        }else{
+            round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
 
 
             game.state.start('State1_' + next);
         });
+        }
+
     },
 
     win2: function (player, co) {
