@@ -3,6 +3,7 @@ var Preload = {
     preload: function () {
         this.load.tilemap('map1-1', 'Mario/assets/map1-1.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.tilemap('map1-2', 'Mario/assets/map1-2.json', null, Phaser.Tilemap.TILED_JSON);
+        this.load.tilemap('map1-3', 'Mario/assets/map1-3.json', null, Phaser.Tilemap.TILED_JSON);
 
         this.load.image('tiles', 'Mario/assets/items2.png');
         this.load.image('tiles2', 'Mario/assets/items3.png');
@@ -39,7 +40,7 @@ var Preload = {
         this.scale.pageAlignVertically = true;
 
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.state.start('State1_2');
+        this.state.start('State1_1');
 
         this.cursors = game.input.keyboard.createCursorKeys();
         this.runButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
