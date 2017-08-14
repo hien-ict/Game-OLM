@@ -28,6 +28,7 @@ var Preload = {
         this.load.audio('mariowin', 'Mario/assets/smb_stage_clear.mp3');
         this.load.audio('question', 'Mario/assets/smb_pipe.wav');
         this.load.audio('kick', 'Mario/assets/smb_bump.wav');
+        this.load.audio('end', 'Mario/assets/Ending.mp3');
     },
 
     create: function () {

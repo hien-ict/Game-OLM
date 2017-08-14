@@ -94,7 +94,7 @@ var State1_2 = {
 
         this.game.camera.follow(this.mario);
 
-        this.mario.x = 2500;
+//        this.mario.x = 2500;
     },
 
     update: function () {
