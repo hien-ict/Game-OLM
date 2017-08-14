@@ -15,6 +15,8 @@ var Preload = {
 
         this.load.spritesheet('mario', 'Mario/assets/marioSmall.png', 34, 34, 7);
         this.load.spritesheet('goomba', 'Mario/assets/goomba.png', 16, 16, 3);
+        this.load.spritesheet('turtle', 'Mario/assets/turtle.png', 17, 24, 3);
+        this.load.spritesheet('flower', 'Mario/assets/flower.png', 16, 23, 3);
         this.load.spritesheet('question', 'Mario/assets/question.png', 16, 17, 7);
 
         this.load.audio('music', 'Mario/assets/music.mp3');
@@ -37,7 +39,7 @@ var Preload = {
         this.scale.pageAlignVertically = true;
 
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.state.start('State1_1');
+        this.state.start('State1_2');
 
         this.cursors = game.input.keyboard.createCursorKeys();
         this.runButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -137,8 +139,16 @@ var Preload = {
     },
 
     moveGoomba: function (child, arg, player) {
+        child.anchor.setTo(0.5);
         if (child.x - player.x < arg && child.body.velocity.x == 0) {
             child.body.velocity.x = -20;
+        }
+        if (child.body.velocity.x > 0){
+
+            child.scale.setTo(-1,1);
+        }
+        else{
+            child.scale.setTo(1,1);
         }
     },
 

@@ -8,6 +8,20 @@ var State1_2 = {
         this.map = game.add.tilemap('map1-2');
         this.map.addTilesetImage('items', 'tiles2');
 
+
+        this.flower = game.add.group();
+        this.flower.enableBody = true;
+        this.map.createFromTiles(6, null, 'flower', 'goomba', this.flower);
+        this.flower.x += 8;
+        this.flower.y -= 7;
+
+        this.flower.callAll('animations.add', 'animations', 'grow', [0, 1], 2, true);
+        this.flower.callAll('animations.play', 'animations', 'grow');
+        this.flower.setAll('body.collideWorldBounds', true);
+        //        this.flower.setAll('body.gravity.y', 300);
+        this.flower.setAll('body.bounce.y', 1);
+        this.flower.forEach(this.startBounceTween, this, true, 128, this.mario);
+
         this.layer = this.map.createLayer('background');
         this.layer.resizeWorld();
         this.layer.wrap = true;
@@ -35,10 +49,15 @@ var State1_2 = {
         this.goombas = game.add.group();
         this.goombas.enableBody = true;
         this.map.createFromTiles(41, null, 'goomba', 'goomba', this.goombas);
+        this.map.createFromTiles(12, null, 'turtle', 'goomba', this.goombas);
         this.goombas.callAll('animations.add', 'animations', 'walk', [0, 1], 2, true);
         this.goombas.callAll('animations.play', 'animations', 'walk');
         this.goombas.setAll('body.bounce.x', 1);
+        //this.goombas.setAll('anchor', 0.5);
+        //this.goombas.anchor.setTo(0.5);
         this.goombas.setAll('body.gravity.y', 500);
+
+
 
         this.questions = game.add.group();
         this.questions.enableBody = true;
@@ -48,12 +67,12 @@ var State1_2 = {
         this.briges = game.add.group();
         this.briges.enableBody = true;
         this.map.createFromTiles(5, null, 'cau', 'goomba', this.briges);
-        this.briges.setAll('body.immovable' , true);
+        this.briges.setAll('body.immovable', true);
 
         this.finish = game.add.group();
         this.finish.enableBody = true;
         this.map.createFromTiles(27, null, 'finish', 'finish', this.finish);
-        this.finish.setAll('body.immovable' , true);
+        this.finish.setAll('body.immovable', true);
 
 
         this.music = game.add.audio('music2');
@@ -75,15 +94,15 @@ var State1_2 = {
 
         this.game.camera.follow(this.mario);
 
-//        this.mario.x = 2000;
+        this.mario.x = 2000;
     },
 
     update: function () {
 
         if (state == 'new') {
             text = 'ROUND 2'
-            Preload.printMessage(text,15);
-            round.game.time.events.add(Phaser.Timer.SECOND *2, function () {
+            Preload.printMessage(text, 15);
+            round.game.time.events.add(Phaser.Timer.SECOND * 2, function () {
 
                 state = 'live';
 
@@ -100,7 +119,7 @@ var State1_2 = {
 
         this.game.physics.arcade.collide(this.mario, this.layer);
         this.game.physics.arcade.collide(this.goombas, this.layer);
-        this.game.physics.arcade.collide(this.mario, this.briges,function(){
+        this.game.physics.arcade.collide(this.mario, this.briges, function () {
             //round.mario.body.onFloor() = true;
             round.mario.body.blocked.down = true;
         });
@@ -108,16 +127,30 @@ var State1_2 = {
 
         Preload.walk(this.mario, 'live');
 
-        this.briges.forEach(Preload.moveBrige, this, true,128, this.mario);
+        this.briges.forEach(Preload.moveBrige, this, true, 128, this.mario);
         this.goombas.forEach(Preload.moveGoomba, this, true, 128, this.mario);
         this.questions.forEach(Preload.playQuestion, this, true, 128, this.mario);
+
         if (state == 'live') {
             this.game.physics.arcade.overlap(this.mario, this.goombas, Preload.kill);
             this.game.physics.arcade.overlap(this.mario, this.questions, Preload.showQuestion);
             this.game.physics.arcade.overlap(this.mario, this.finish, Preload.win);
-
+            this.game.physics.arcade.overlap(this.mario, this.flower, function () {
+                state = 'die';
+                State1_2.mario.frame = 1;
+                State1_2.mario.body.enable = false;
+                State1_2.mario.animations.stop();
+            });
         };
         if (this.death && !this.death.done) this.death.next();
+
+    },
+
+    startBounceTween: function (child, arg, player) {
+
+        //child.y=200;
+
+        child.body.gravity.y = 256 - child.y;
 
     }
 
