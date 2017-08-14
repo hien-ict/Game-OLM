@@ -327,11 +327,16 @@ var Preload = {
     },
 
     win: function (player, cot) {
+        state = 'win';
+        cot.enableBody = false;
         round.music.stop();
         round.mariowin.play();
         Preload.printMessage("  WIN", 15);
         game.camera.follow(cot);
-        state = 'win';
+
+        if (next2 == next) {
+            next++;
+        }
         player.body.velocity.x = 0;
         //        score += counter;
         //        Preload.updateScore();
@@ -346,7 +351,8 @@ var Preload = {
             //round.game.paused = true;
         });
         round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
-            next += 1;
+
+
             game.state.start('State1_' + next);
         });
     },

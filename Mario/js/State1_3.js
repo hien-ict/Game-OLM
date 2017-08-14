@@ -2,6 +2,7 @@ var State1_3 = {
     create: function () {
         round = State1_3;
         counter = 500;
+        next2 = 3;flag = 1;
         state = 'new';
         this.stage.backgroundColor = '#5C94FC';
 
@@ -93,6 +94,7 @@ var State1_3 = {
 
         this.game.camera.follow(this.mario);
 
+        this.mario.x = 3050;
     },
 
     update: function () {
