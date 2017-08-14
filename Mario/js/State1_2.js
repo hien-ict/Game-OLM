@@ -101,7 +101,7 @@ var State1_2 = {
 
         if (state == 'new') {
             text = 'ROUND 2'
-            Preload.printMessage(text, 15);
+            Preload.printMessage(text, 15, 128);
             round.game.time.events.add(Phaser.Timer.SECOND * 2, function () {
 
                 state = 'live';
