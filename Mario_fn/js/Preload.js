@@ -1,4 +1,5 @@
-var round, next = 1;
+var round, next = 1,
+    vx, vy;
 var Preload = {
     preload: function () {
         this.load.tilemap('map1-1', 'Mario/assets/map1-1.json', null, Phaser.Tilemap.TILED_JSON);
@@ -130,6 +131,8 @@ var Preload = {
                 console.log(true);
                 state = 'live';
                 this.mario.body.gravity.y = 700;
+                player.body.velocity.x = vx;
+                player.body.velocity.y = vy;
             } else if (Cf.resq == 0) {
                 Cf.popup = 0;
                 Cf.waiting = 0;
@@ -137,6 +140,8 @@ var Preload = {
                 console.log(false);
                 state = 'live';
                 this.body.gravity.y = 700;
+                player.body.velocity.x = vx;
+                player.body.velocity.y = vy;
             }
         }
     },
@@ -200,7 +205,10 @@ var Preload = {
             Cf.next();
             //            state = 'waiting';
             //            player.body.gravity.y = 0;
+            //            vx = player.body.velocity.x ;
+            //            vy = player.body.velocity.y ;
             //            player.body.velocity.x = 0;
+            //            player.body.velocity.y = 0;
         }
 
     },
@@ -252,7 +260,7 @@ var Preload = {
                 this.printMessage("GAME OVER!", 15);
 
                 round.game.time.events.add(Phaser.Timer.SECOND * 5, function () {
-                    game.state.start('State1_4',true, false,'BẠN ĐÃ DỪNG CUỘC CHƠI\nĐiểm của bạn là: '+score);
+                    game.state.start('State1_4', true, false, 'BẠN ĐÃ DỪNG CUỘC CHƠI\nĐiểm của bạn là: ' + score);
                 });
             }
 
@@ -355,18 +363,18 @@ var Preload = {
             player.kill();
             //round.game.paused = true;
         });
-        if (round==State1_3){
+        if (round == State1_3) {
             round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
 
 
-            game.state.start('State1_' + next,true, false,'CHÚC MỪNG BẠN ĐÃ THẮNG\nĐiểm của bạn là: '+score);
-        });
-        }else{
+                game.state.start('State1_' + next, true, false, 'CHÚC MỪNG BẠN ĐÃ THẮNG\nĐiểm của bạn là: ' + score);
+            });
+        } else {
             round.game.time.events.add(Phaser.Timer.SECOND * 8.3, function () {
 
 
-            game.state.start('State1_' + next);
-        });
+                game.state.start('State1_' + next);
+            });
         }
 
     },
