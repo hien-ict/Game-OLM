@@ -13,9 +13,11 @@ var State1_1 = {
         this.map = game.add.tilemap('map1-1');
         this.map.addTilesetImage('items', 'tiles');
 
-        this.layer = this.map.createLayer('background');
+        this.layer = this.map.createLayer('background', 256, 256);
+        //this.layer.scale.set(0.5);
         this.layer.resizeWorld();
         this.layer.wrap = true;
+
         this.map.setCollisionBetween(14, 16);
         this.map.setCollisionBetween(21, 22);
         this.map.setCollisionBetween(27, 28);
