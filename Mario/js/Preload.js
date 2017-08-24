@@ -157,6 +157,9 @@ var Preload = {
         } else {
             child.scale.setTo(1, 1);
         }
+        if (child.y> 256){
+            child.kill();
+        }
     },
 
     moveBrige: function (child, arg, player) {
