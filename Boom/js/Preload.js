@@ -245,17 +245,18 @@ var Preload = {
                     }
                 }, this)
 
-            if (mapState[u][v] & ObjState)
+            if (mapState[u][v] & ObjState) {
+                length = 0;
                 Preload.break.forEachAlive(function (breakable) {
                     if ((u == breakable.u) && v == breakable.v) {
-                        mapState[u][v] = mapState[u][v] & ~ObjState;
+
                         Preload.dropItem(breakable, u, v);
                         breakable.kill();
-                        length = 0;
                     }
                 }, this)
+            }
 
-            yield;
+            //            yield;
             if (length > 0) {
                 switch (dir) {
                     case 2:
@@ -277,6 +278,7 @@ var Preload = {
             }
             while (timer > 0) yield timer--;
             Preload.flare.remove(flare);
+            mapState[u][v] = mapState[u][v] & ~ObjState;
         }();
     },
 
@@ -328,7 +330,7 @@ var Preload = {
                     }
             }
             mapState[u][v] = mapState[u][v] | ItemState;
-            item.scale.x = item.scale.y = 25/45;
+            item.scale.x = item.scale.y = 25 / 45;
             item.anchor.x = item.anchor.y = 0.5;
             item.body.immovable = true;
             item.u = u;
