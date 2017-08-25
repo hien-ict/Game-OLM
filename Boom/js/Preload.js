@@ -117,7 +117,7 @@ var Preload = {
     createBomber: function () {
 
         this.bomber = game.add.sprite(37.5, 37.5, 'bomber');
-        this.bomber.scale.setTo(0.45);
+        this.bomber.scale.setTo(0.4);
         this.bomber.anchor.setTo(0.5);
 
         this.game.physics.enable(this.bomber);
@@ -129,11 +129,11 @@ var Preload = {
         this.bomber.animations.add('up', [5, 6, 7, 8, 9], 6, true);
         this.bomber.animations.add('down', [0, 1, 2, 3, 4], 6, true);
         this.bomber.animations.add('left', [10, 11, 12, 13, 14], 6, true);
-        this.bomber.body.setSize(55, 30, 0, 50);
+        this.bomber.body.setSize(50, 30, 5, 50);
 
-        this.bomber.bomb = 3;
-        this.bomber.size = 3;
-        this.bomber.shoe = 3;
+        this.bomber.bomb = 2;
+        this.bomber.size = 2;
+        this.bomber.shoe = 2;
     },
 
     createMap: function () {
@@ -260,6 +260,28 @@ var Preload = {
         }();
     },
 
+    slide: function (player, obj) {
+        u = Math.floor(player.x / 25);
+        v = Math.floor((player.y + 10) / 25);
 
+        if (Preload.cursors.up.isDown) {
+
+            if (mapState[u][v - 1] == 0 && mapState[u - 1][v - 1] != 0 && (player.x < (u * 25 + 12.5))) {
+                player.x += 1.5;
+            }
+            if (mapState[u][v - 1] == 0 && mapState[u + 1][v - 1] != 0 && (player.x >= (u * 25 + 12.5))) {
+                player.x -= 1.5;
+            }
+        }
+        if (Preload.cursors.down.isDown) {
+
+            if (mapState[u][v + 1] == 0 && mapState[u - 1][v + 1] != 0 && (player.x < (u * 25 + 12.5))) {
+                player.x += 1.5;
+            }
+            if (mapState[u][v + 1] == 0 && mapState[u + 1][v + 1] != 0 && (player.x >= (u * 25 + 12.5))) {
+                player.x -= 1.5;
+            }
+        }
+    }
 
 }

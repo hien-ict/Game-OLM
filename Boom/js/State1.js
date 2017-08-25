@@ -20,11 +20,21 @@ var State1 = {
 
     update: function () {
 
-        this.game.physics.arcade.collide(Preload.bomber, Preload.layer);
-        this.game.physics.arcade.collide(Preload.bomber, Preload.break);
+        this.game.physics.arcade.collide(Preload.bomber, Preload.layer, Preload.slide);
+        this.game.physics.arcade.collide(Preload.bomber, Preload.break, Preload.slide);
         this.game.physics.arcade.collide(Preload.bomber, Preload.boom);
 
         Preload.walk(Preload.bomber, 'live');
         Preload.play(Preload.bomber, 'live');
-    }
+    },
+
+//    render: function () {
+//        game.debug.body(Preload.bomber);
+//        Preload.break.forEachAlive(function (breakable) {
+//            game.debug.body(breakable)
+//        });
+//        Preload.flare.forEachAlive(function (breakable) {
+//            game.debug.body(breakable)
+//        })
+//    }
 }
