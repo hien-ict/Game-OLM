@@ -1,18 +1,19 @@
 var state = 'live';
 var RUN_SPEED = 90;
-var mapState, maxBomb = 0;
+var mapState, coBomb = 0;
 const BombState = 1;
 const PlayerState = 2;
 const ObjState = 4;
 const WallState = 8;
+const ItemState = 16;
 
 var Preload = {
     preload: function () {
         this.load.tilemap('map1', 'Boom/assets/map1.json', null, Phaser.Tilemap.TILED_JSON);
 
-        this.load.image('item_bomb', 'Boom/assets/item_bomb.png');
-        this.load.image('item_bombsize', 'Boom/assets/item_bombsize.png');
-        this.load.image('item_shoe', 'Boom/assets/item_shoe.png');
+        this.load.spritesheet('item_bomb', 'Boom/assets/item_bomb.png', 42, 44, 2);
+        this.load.spritesheet('item_bombsize', 'Boom/assets/item_bombsize.png', 45, 45, 2);
+        this.load.spritesheet('item_shoe', 'Boom/assets/item_shoe.png', 38, 44, 2);
         this.load.image('item_1', 'Boom/assets/item_1.png');
         this.load.image('item_2', 'Boom/assets/item_2.png');
         this.load.image('item_3', 'Boom/assets/item_3.png');
@@ -80,7 +81,7 @@ var Preload = {
                 u = tile_u * 25 + 12.5;
                 tile_v = Math.floor((player.y + 10) / 25);
                 v = tile_v * 25 + 12.5;
-                if ((mapState[tile_u][tile_v] & BombState) || (player.bomb < maxBomb)) return;
+                if ((mapState[tile_u][tile_v] & BombState) || (player.bomb < coBomb)) return;
                 mapState[tile_u][tile_v] = mapState[tile_u][tile_v] | BombState;
                 bomb = this.boom.create(u, v, 'boom');
                 bomb.scale.x = 0.5;
@@ -93,14 +94,14 @@ var Preload = {
                 bomb.animations.add('bomb', [0, 1, 2], 2, true);
                 bomb.animations.play('bomb');
 
-                bomb.bombKiller = this.bombKiller(Preload.boom.children[maxBomb], tile_u, tile_v);
+                bomb.bombKiller = this.bombKiller(Preload.boom.children[coBomb], tile_u, tile_v);
                 bomb.u = tile_u;
                 bomb.v = tile_v;
                 bomb.timer = 180;
                 bomb.flared = bomb.bombKiller;
 
 
-                maxBomb += 1;
+                coBomb += 1;
             }
         }
         this.boom.children.forEach(function (bomb) {
@@ -131,8 +132,8 @@ var Preload = {
         this.bomber.animations.add('left', [10, 11, 12, 13, 14], 6, true);
         this.bomber.body.setSize(50, 30, 5, 50);
 
-        this.bomber.bomb = 2;
-        this.bomber.size = 2;
+        this.bomber.bomb = 4;
+        this.bomber.size = 5;
         this.bomber.shoe = 2;
     },
 
@@ -168,6 +169,11 @@ var Preload = {
             mapState[u][v] = mapState[u][v] | ObjState;
             breakable.u = u;
             breakable.v = v;
+
+            if (Math.random() > 0.8) {
+                breakable.item = Math.floor((Math.random() * 3) + 1);
+            }
+
         }, this);
 
         this.map.forEach(function (layer) {
@@ -190,11 +196,16 @@ var Preload = {
         this.flare.enableBody = true;
     },
 
+    createItem: function () {
+        this.item = game.add.group();
+        this.item.enableBody = true;
+    },
+
     bombKiller: function (bomb, u, v) {
         return function () {
             mapState[u][v] = mapState[u][v] & ~BombState;
             Preload.boom.remove(bomb);
-            maxBomb -= 1;
+            coBomb -= 1;
             Preload.flareMaker(u, v, 0, Preload.bomber.size);
         }
     },
@@ -226,10 +237,19 @@ var Preload = {
                     bomb.bombKiller();
             }, this);
 
+            if (mapState[u][v] & ItemState)
+                Preload.item.forEachAlive(function (item) {
+                    if ((u == item.u) && v == item.v) {
+                        mapState[u][v] = mapState[u][v] & ~ItemState;
+                        item.kill();
+                    }
+                }, this)
+
             if (mapState[u][v] & ObjState)
                 Preload.break.forEachAlive(function (breakable) {
                     if ((u == breakable.u) && v == breakable.v) {
                         mapState[u][v] = mapState[u][v] & ~ObjState;
+                        Preload.dropItem(breakable, u, v);
                         breakable.kill();
                         length = 0;
                     }
@@ -281,6 +301,40 @@ var Preload = {
             if (mapState[u][v + 1] == 0 && mapState[u + 1][v + 1] != 0 && (player.x >= (u * 25 + 12.5))) {
                 player.x -= 1.5;
             }
+        }
+    },
+
+    dropItem: function (breakable, u, v) {
+
+        if (breakable.item) {
+            switch (breakable.item) {
+                case 1:
+                    {
+                        item = Preload.item.create(u * 25 + 12.5, v * 25 + 12.5, 'item_bomb');
+                        item.type = 1;
+                        break;
+                    }
+                case 2:
+                    {
+                        item = Preload.item.create(u * 25 + 12.5, v * 25 + 12.5, 'item_bombsize');
+                        item.type = 2;
+                        break;
+                    }
+                case 3:
+                    {
+                        item = Preload.item.create(u * 25 + 12.5, v * 25 + 12.5, 'item_shoe');
+                        item.type = 3;
+                        break;
+                    }
+            }
+            mapState[u][v] = mapState[u][v] | ItemState;
+            item.scale.x = item.scale.y = 25/45;
+            item.anchor.x = item.anchor.y = 0.5;
+            item.body.immovable = true;
+            item.u = u;
+            item.v = v;
+            item.animations.add('item', [0, 1], 1, true);
+            item.animations.play('item');
         }
     }
 

@@ -7,6 +7,8 @@ var State1 = {
 
         Preload.createMapState();
 
+        Preload.createItem();
+
         Preload.createMap();
 
         Preload.createFlare();
