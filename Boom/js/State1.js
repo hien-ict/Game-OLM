@@ -25,18 +25,20 @@ var State1 = {
         this.game.physics.arcade.collide(Preload.bomber, Preload.layer, Preload.slide);
         this.game.physics.arcade.collide(Preload.bomber, Preload.break, Preload.slide);
         this.game.physics.arcade.collide(Preload.bomber, Preload.boom);
+        this.game.physics.arcade.overlap(Preload.bomber, Preload.flare, Preload.kill);
+        this.game.physics.arcade.overlap(Preload.bomber, Preload.item, Preload.select);
 
         Preload.walk(Preload.bomber, 'live');
         Preload.play(Preload.bomber, 'live');
     },
 
-//    render: function () {
-//        game.debug.body(Preload.bomber);
-//        Preload.break.forEachAlive(function (breakable) {
-//            game.debug.body(breakable)
-//        });
-//        Preload.flare.forEachAlive(function (breakable) {
-//            game.debug.body(breakable)
-//        })
-//    }
+    render: function () {
+        game.debug.body(Preload.bomber);
+        Preload.break.forEachAlive(function (breakable) {
+            game.debug.body(breakable)
+        });
+        Preload.flare.forEachAlive(function (breakable) {
+            game.debug.body(breakable)
+        })
+    }
 }

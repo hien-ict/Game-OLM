@@ -6,8 +6,12 @@ const PlayerState = 2;
 const ObjState = 4;
 const WallState = 8;
 const ItemState = 16;
+const maxBomb = 8;
+const maxSize = 8;
+const maxShoe = 8;
 
 var Preload = {
+
     preload: function () {
         this.load.tilemap('map1', 'Boom/assets/map1.json', null, Phaser.Tilemap.TILED_JSON);
 
@@ -103,21 +107,58 @@ var Preload = {
 
                 coBomb += 1;
             }
+
+            this.boom.children.forEach(function (bomb) {
+                bomb.timer -= 1;
+                if (bomb.timer < 1) {
+                    bomb.bombKiller();
+                }
+            });
+            this.flare.children.forEach(function (flare) {
+                flare.flareHandler.next();
+            });
         }
-        this.boom.children.forEach(function (bomb) {
-            bomb.timer -= 1;
-            if (bomb.timer < 1) {
-                bomb.bombKiller();
-            }
-        });
-        this.flare.children.forEach(function (flare) {
-            flare.flareHandler.next();
-        });
+    },
+
+    kill: function (player, flare) {
+        //        player.kill();
+    },
+
+    select: function (player, item) {
+        item.kill();
+        switch (item.type) {
+            case 1:
+                {
+                    if (player.bomb < maxBomb) {
+                        player.bomb++;
+                        console.log(player.bomb);
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    if (player.size < maxSize) {
+                        player.size++;
+                        console.log(player.size);
+                    }
+                    break;
+                }
+
+            case 3:
+                {
+                    if (player.shoe < maxShoe) {
+                        player.shoe++;
+                        console.log(player.shoe);
+                    }
+                    break;
+                }
+
+        }
     },
 
     createBomber: function () {
 
-        this.bomber = game.add.sprite(37.5, 37.5, 'bomber');
+        this.bomber = game.add.sprite(30, 30, 'bomber');
         this.bomber.scale.setTo(0.4);
         this.bomber.anchor.setTo(0.5);
 
@@ -130,7 +171,7 @@ var Preload = {
         this.bomber.animations.add('up', [5, 6, 7, 8, 9], 6, true);
         this.bomber.animations.add('down', [0, 1, 2, 3, 4], 6, true);
         this.bomber.animations.add('left', [10, 11, 12, 13, 14], 6, true);
-        this.bomber.body.setSize(50, 30, 5, 50);
+        this.bomber.body.setSize(50, 50, 5, 30);
 
         this.bomber.bomb = 4;
         this.bomber.size = 5;
@@ -258,25 +299,38 @@ var Preload = {
 
             //            yield;
             if (length > 0) {
+                u2 = u;
+                v2 = v;
                 switch (dir) {
                     case 2:
-                        v += 1;
+                        v2 += 1;
                         break;
                     case 4:
-                        u -= 1;
+                        u2 -= 1;
                         break;
                     case 6:
-                        u += 1;
+                        u2 += 1;
                         break;
                     case 8:
-                        v -= 1;
+                        v2 -= 1;
                         break;
                 };
                 if (dir != 0)
-                    if (Preload.flareMaker(u, v, dir, length - 1))
+                    if (Preload.flareMaker(u2, v2, dir, length - 1))
                         flare.frame -= 1;
             }
-            while (timer > 0) yield timer--;
+            while (timer > 0) {
+                if (Preload.bomber.overlap(flare)) {
+                    space = Math.sqrt(Math.pow(((Preload.bomber.x) - (u * 25 + 12.5)), 2) + Math.pow(((Preload.bomber.y + 10) - (v * 25 + 12.5)), 2));
+                    console.log(space);
+                    if (space < 14.5) {
+                        Preload.bomber.kill();
+                        console.log('Hi ' + space);
+                        //state = 'die';
+                    }
+                }
+                yield timer--;
+            }
             Preload.flare.remove(flare);
             mapState[u][v] = mapState[u][v] & ~ObjState;
         }();
@@ -302,6 +356,26 @@ var Preload = {
             }
             if (mapState[u][v + 1] == 0 && mapState[u + 1][v + 1] != 0 && (player.x >= (u * 25 + 12.5))) {
                 player.x -= 1.5;
+            }
+        }
+        if (Preload.cursors.left.isDown) {
+
+            if (mapState[u - 1][v] == 0 && mapState[u - 1][v - 1] != 0 && (player.y < (v * 25 + 12.5))) {
+                player.y += 1.5;
+            }
+            if (mapState[u - 1][v] == 0 && mapState[u - 1][v + 1] != 0 && (player.y >(v * 25 + 12.5))) {
+                player.y -= 1.5;
+            }
+        }
+        if (Preload.cursors.right.isDown) {
+            console.log(player.y);
+            if (mapState[u + 1][v] == 0 && mapState[u + 1][v - 1] != 0 && (player.body.y < (v * 25 + 12.5))) {
+                player.y += 1.5;
+                console.log(1);
+            }
+            if (mapState[u + 1][v] == 0 && mapState[u + 1][v + 1] != 0) {
+                player.y -= 1.5;
+                console.log(2);
             }
         }
     },
@@ -335,7 +409,7 @@ var Preload = {
             item.body.immovable = true;
             item.u = u;
             item.v = v;
-            item.animations.add('item', [0, 1], 1, true);
+            item.animations.add('item', [0, 1], 2, true);
             item.animations.play('item');
         }
     }
