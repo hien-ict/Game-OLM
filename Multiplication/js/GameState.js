@@ -6,11 +6,12 @@ var GameState = {
 
         this.createBlock();
         this.createMapState();
-
+        this.updateMapState();
+        this.createResult();
     },
 
     update: function () {
-
+        this.updateResult();
     },
 
     createBlock: function () {
@@ -26,65 +27,79 @@ var GameState = {
 
         for (i = 1; i <= 6; i++) {
             for (j = 1; j <= 6; j++) {
-                block = this.block.create(150 + i * 50, 430 - j * 50, 'block');
-                mapState[i][j] = block;
-                block.scale.setTo(0.5);
-                block.anchor.setTo(0.5);
-
-                block.inputEnabled = true;
-                block.input.useHandCursor = true;
-                block.frame = Math.floor(Math.random() * 9 + 1) - 1;
-                block.events.onInputDown.add(this.play, this);
-                block.val = block.frame + 1;
-                if (j == 6) {
-                    block.end = true;
-                } else{
-                    block.end = false;
-                }
-                block.u = i;
-                block.v = j;
-
-                this.game.physics.enable(block);
+                mapState[i][j] = Math.floor(Math.random() * 9 + 1);
             }
         }
-
-
+        for (i = 1; i <= 6; i++) {
+            mapState[i][0] = 6;
+        }
     },
 
     updateMapState: function () {
         for (i = 1; i <= 6; i++) {
             for (j = 1; j <= 6; j++) {
+                block = this.block.create(150 + i * 50, 430 - j * 50, 'block');
+                block.scale.setTo(0.5);
+                block.anchor.setTo(0.5);
+                block.inputEnabled = true;
+                block.input.useHandCursor = true;
+                if (mapState[i][j] != 0) {
+                    block.frame = mapState[i][j] - 1;
+                } else {
+                    block.frame = 12;
+                }
 
+                block.events.onInputDown.add(this.play, this);
+                block.u = i;
+                block.v = j;
+                block.val = mapState[i][j];
             }
         }
     },
 
     play: function (child) {
-        result *= child.val;
+        result *= (child.val);
         console.log(child.u + "-" + child.v);
-        console.log(mapState[child.u][child.u]);
         child.kill();
-        for (i = child.v + 1; i <= 6; i++) {
-            if (mapState[child.u][i].alive) {
-                mapState[child.u][i].v -= 1;
-                console.log(mapState[child.u][i]);
-                if (mapState[child.u][i].end) {
-                    mapState[child.u][i].alive = false;
+        for (i = child.v + 1; i <= mapState[child.u][0]; i++) {
+            if (mapState[child.u][i] != 0) {
+                for (j = 0; j < 36; j++) {
+                    if (GameState.block.children[j].u == child.u && GameState.block.children[j].v == i) {
+                        a = GameState.block.children[j]
+                    }
                 }
+                console.log(mapState[child.u][i])
                 mapState[child.u][i - 1] = mapState[child.u][i];
-                tween = game.add.tween(mapState[child.u][i]);
+                a.v -= 1;
+                tween = game.add.tween(a);
                 tween.to({
                     y: 430 - (i - 1) * 50
                 }, 300, "Linear");
                 tween.start();
-                //                mapState[child.u][i].body.velocity.y = 20;
+
             }
 
         }
+        mapState[child.u][mapState[child.u][0]] =0;
+        mapState[child.u][0] -= 1;
 
     },
 
-    render: function () {
+    createResult: function(){
+        this.resultBlock = game.add.sprite(560, 30, 'block');
+        this.resultBlock.frame = 12;
+        this.resultBlock.scale.setTo(0.5);
+        this.resultBlock.anchor.setTo(0.5);
+        this.resultText = game.add.text(560, 33, result,{
+            font: "30px Arial",
+            fill: "#aaff00",
+            align: "center"
+        });
+        this.resultText.anchor.setTo(0.5);
+    },
 
-    }
+    updateResult: function(){
+        this.resultText.setText(result);
+    },
+
 }
