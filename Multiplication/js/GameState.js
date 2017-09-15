@@ -1,4 +1,6 @@
-result = 1;
+resultA = 1, resultB = 1; result = new Array(4);t=0;
+block_speed = 50;
+state = 'play';
 max = 6;
 var GameState = {
     create: function () {
@@ -8,6 +10,7 @@ var GameState = {
         this.createMapState();
         this.updateMapState();
         this.createResult();
+        this.play();
     },
 
     update: function () {
@@ -49,7 +52,7 @@ var GameState = {
                     block.frame = 12;
                 }
 
-                block.events.onInputDown.add(this.play, this);
+                block.events.onInputDown.add(this.control, this);
                 block.u = i;
                 block.v = j;
                 block.val = mapState[i][j];
@@ -57,10 +60,12 @@ var GameState = {
         }
     },
 
-    play: function (child) {
-        result *= (child.val);
+    control: function (f) {
+        if()
+        result[t]=child;
+        resultB *= (child.val);
         console.log(child.u + "-" + child.v);
-        child.kill();
+        //child.kill();
         for (i = child.v + 1; i <= mapState[child.u][0]; i++) {
             if (mapState[child.u][i] != 0) {
                 for (j = 0; j < 36; j++) {
@@ -80,26 +85,64 @@ var GameState = {
             }
 
         }
-        mapState[child.u][mapState[child.u][0]] =0;
+        mapState[child.u][mapState[child.u][0]] = 0;
         mapState[child.u][0] -= 1;
 
     },
 
-    createResult: function(){
+    createResult: function () {
         this.resultBlock = game.add.sprite(560, 30, 'block');
         this.resultBlock.frame = 12;
         this.resultBlock.scale.setTo(0.5);
         this.resultBlock.anchor.setTo(0.5);
-        this.resultText = game.add.text(560, 33, result,{
+        this.game.physics.enable(this.resultBlock);
+        this.resultBlock.body.velocity.y = block_speed;
+
+        this.resultText = game.add.text(560, 30, resultA, {
             font: "30px Arial",
-            fill: "#aaff00",
+            fill: "#00ff00",
             align: "center"
         });
         this.resultText.anchor.setTo(0.5);
+        this.game.physics.enable(this.resultText);
+        this.resultText.body.velocity.y = block_speed;
     },
 
-    updateResult: function(){
-        this.resultText.setText(result);
+    updateResult: function () {
+        this.resultText.setText(resultA);
     },
 
+    play: function () {
+        do {
+            x = Math.floor(Math.random() * 6 + 1);
+            y = Math.floor(Math.random() * 6 + 1);
+        } while (mapState[x][y] == 0);
+        resultA *= mapState[x][y];
+        console.log(resultA + ':' + x + '-' + y);
+        t = 0;
+        do {
+            a = Math.floor(Math.random() * 4 + 1);
+            switch (a) {
+                case 1:
+                    if (mapState[x - 1][y] != 0) t = mapState[x - 1][y];
+                    break;
+                case 2:
+                    if (x < 6) {
+                        if (mapState[x + 1][y] != 0) t = mapState[x + 1][y];
+                    }
+
+                    break;
+                case 3:
+                    if (mapState[x][y - 1] != 0) t = mapState[x][y - 1];
+                    break;
+                case 4:
+                    if (y < 6) {
+                        if (mapState[x][y + 1] != 0) t = mapState[x][y + 1];
+                    }
+                    break;
+            }
+        } while (t === 0)
+        resultA *= t;
+        this.updateResult();
+    }
 }
