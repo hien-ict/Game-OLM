@@ -3,18 +3,20 @@ result = new Array(4).fill(0);
 t_a = 0;
 block_speed = 40;
 block_stop = 450;
-state = 'play';
+state = 1;
 var GameState = {
 
     create: function () {
-
+        time = 90;
         this.background = game.add.sprite(0, 0, 'background');
+        this.createTime();
         this.createBlockDead();
         this.createBlock();
         this.createMapState();
         this.updateMapState();
         this.play();
         this.createResult();
+        this.game.time.events.loop(Phaser.Timer.SECOND, this.updateTime, this);
 
     },
 
@@ -313,5 +315,47 @@ var GameState = {
                 this.deadBlock.anchor.setTo(0.5);
             }
         }
-    }
+    },
+
+    createTime: function () {
+        console.log("time");
+        style = {
+            font: '25px Times New Roman',
+            fill: '#fff',
+            align: "center",
+            stroke: "#ff0000",
+            strokeThickness: 2
+        }
+        style2 = {
+            font: '25px Times New Roman',
+            fill: '#0f0',
+            align: "center",
+            stroke: "#ff0000",
+            strokeThickness: 2
+        }
+        this.level = game.add.text(20, 30, "LEVEL: " , style2);
+        this.level = game.add.text(120, 30, state, style);
+        this.time = game.add.text(20, 80, "TIME:", style2);
+        this.time = game.add.text(100, 80, "1:30", style);
+    },
+
+    updateTime() {
+        time--;
+        if (time>=60){
+            if (time-60>=10){
+                this.time.setText("1:"+(time-60));
+            }else{
+                this.time.setText("1:0"+(time-60));
+            }
+        }else{
+            if (time>=10){
+                this.time.setText("0:"+(time));
+            }else{
+                this.time.setText("0:0"+(time));
+            }
+
+        }
+
+    },
+
 }
