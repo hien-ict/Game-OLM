@@ -10,19 +10,20 @@ var Preload = {
     },
     preload: function () {
         this.load.spritesheet('block', 'Multiplication/assets/Block_1.png', 100, 100, 15);
+        this.load.spritesheet('select', 'Multiplication/assets/select.png', 100, 100, 3);
 
-        this.load.image('background', 'Multiplication/assets/background.png')
+        this.load.image('background', 'Multiplication/assets/background.jpg')
 
-        this.load.audio('snd1', 'Multiplication/assets/sndBeep2.ogg');
-        this.load.audio('snd2', 'Multiplication/assets/sndClick.ogg');
-        this.load.audio('snd3', 'Multiplication/assets/sndComet.ogg');
-        this.load.audio('snd4', 'Multiplication/assets/sndDestroyBlock.ogg');
-        this.load.audio('snd5', 'Multiplication/assets/sndDropWall.ogg');
-        this.load.audio('snd8', 'Multiplication/assets/sndTick.ogg');
+        this.load.audio('snd1', 'Multiplication/assets/sndBeep2.mp3');
+        this.load.audio('snd2', 'Multiplication/assets/sndClick.mp3');
+        this.load.audio('snd3', 'Multiplication/assets/sndComet.mp3');
+        this.load.audio('snd4', 'Multiplication/assets/sndDestroyBlock.mp3');
+        this.load.audio('snd5', 'Multiplication/assets/sndDropWall.mp3');
+        this.load.audio('snd8', 'Multiplication/assets/sndTick.mp3');
 
     },
 
     create: function () {
-        this.state.start('GameState');
+        this.state.start('Home');
     }
 }

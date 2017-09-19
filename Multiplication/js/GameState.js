@@ -1,20 +1,26 @@
-resultA = 1, resultB = 1; result = new Array(4);t=0;
-block_speed = 50;
+resultA = 1, resultB = 1;
+result = new Array(4).fill(0);
+t_a = 0;
+block_speed = 40;
+block_stop = 450;
 state = 'play';
-max = 6;
 var GameState = {
-    create: function () {
-        this.background = game.add.sprite(0, 0, 'background');
 
+    create: function () {
+
+        this.background = game.add.sprite(0, 0, 'background');
+        this.createBlockDead();
         this.createBlock();
         this.createMapState();
         this.updateMapState();
-        this.createResult();
         this.play();
+        this.createResult();
+
     },
 
     update: function () {
-        this.updateResult();
+        this.updateBlockResult();
+        this.updateMap();
     },
 
     createBlock: function () {
@@ -30,7 +36,7 @@ var GameState = {
 
         for (i = 1; i <= 6; i++) {
             for (j = 1; j <= 6; j++) {
-                mapState[i][j] = Math.floor(Math.random() * 9 + 1);
+                mapState[i][j] = Math.floor(Math.random() * 8 + 2);
             }
         }
         for (i = 1; i <= 6; i++) {
@@ -56,44 +62,129 @@ var GameState = {
                 block.u = i;
                 block.v = j;
                 block.val = mapState[i][j];
+                block.select = false;
+                block.selected = this.createSelect();
             }
         }
     },
 
-    control: function (f) {
-        if()
-        result[t]=child;
-        resultB *= (child.val);
-        console.log(child.u + "-" + child.v);
-        //child.kill();
-        for (i = child.v + 1; i <= mapState[child.u][0]; i++) {
-            if (mapState[child.u][i] != 0) {
-                for (j = 0; j < 36; j++) {
-                    if (GameState.block.children[j].u == child.u && GameState.block.children[j].v == i) {
-                        a = GameState.block.children[j]
-                    }
-                }
-                console.log(mapState[child.u][i])
-                mapState[child.u][i - 1] = mapState[child.u][i];
-                a.v -= 1;
-                tween = game.add.tween(a);
-                tween.to({
-                    y: 430 - (i - 1) * 50
-                }, 300, "Linear");
-                tween.start();
-
-            }
-
+    control: function (child) {
+        if (t_a == 0 && child.select == false) {
+            result[t_a] = child;
+            child.select = true;
+            t_a++;
+            resultB *= (child.val);
         }
-        mapState[child.u][mapState[child.u][0]] = 0;
-        mapState[child.u][0] -= 1;
 
+        if (t_a > 0 && child.select == false) {
+            if ((Math.abs(child.u - result[t_a - 1].u) == 1 && (child.v == result[t_a - 1].v)) || (Math.abs(child.v - result[t_a - 1].v) == 1 && (child.u == result[t_a - 1].u))) {
+                child.select = true;
+                result[t_a] = child;
+                t_a++;
+                resultB *= (child.val);
+
+                if (resultB == resultA) {
+                    for (k = 0; k < t_a; k++) {
+                        result[k].kill();
+                        result[k].select = false;
+
+                        for (i = result[k].v + 1; i <= mapState[result[k].u][0]; i++) {
+                            if (mapState[result[k].u][i] != 0) {
+
+                                for (j = 0; j < 36; j++) {
+                                    if (GameState.block.children[j].u == result[k].u && GameState.block.children[j].v == i) {
+                                        a = GameState.block.children[j]
+                                    }
+                                }
+                                mapState[result[k].u][i - 1] = mapState[result[k].u][i];
+                                a.v -= 1;
+                                tween = game.add.tween(a);
+                                tween.to({
+                                    y: 430 - (i - 1) * 50
+                                }, 300, "Linear");
+                                tween.start();
+                            }
+                        }
+
+
+                        mapState[result[k].u][mapState[result[k].u][0]] = 0;
+                        mapState[result[k].u][0] -= 1;
+                    }
+
+                    for (h = 1; h < 5; h++) {
+                        if (mapState[h][1] == 0 && mapState[h + 1][1] == 0 && mapState[h + 2][1] != 0) {
+                            for (y = 1; y <= mapState[h + 2][0]; y++) {
+                                for (o = 0; o < 36; o++) {
+                                    if (GameState.block.children[o].u == h + 2 && GameState.block.children[o].v == y) {
+                                        r = GameState.block.children[o]
+                                    }
+                                };
+                                tween = game.add.tween(r);
+                                tween.to({
+                                    x: 150 + (h) * 50
+                                }, 300, "Linear");
+                                tween.start();
+                                r.u -= 2;
+                                mapState[h][y] = mapState[h + 2][y];
+                                mapState[h + 2][y] = 0;
+                            }
+                            mapState[h][0] = mapState[h + 2][0];
+                            mapState[h + 2][0] = 0;
+                        }
+                    }
+                    for (h = 1; h < 6; h++) {
+                        while (mapState[h][1] == 0 && mapState[h + 1][1] != 0) {
+                            for (y = 1; y <= mapState[h + 1][0]; y++) {
+                                for (o = 0; o < 36; o++) {
+                                    if (GameState.block.children[o].u == h + 1 && GameState.block.children[o].v == y) {
+                                        r = GameState.block.children[o]
+                                    }
+                                };
+                                tween = game.add.tween(r);
+                                tween.to({
+                                    x: 150 + (h) * 50
+                                }, 300, "Linear");
+                                tween.start();
+                                r.u -= 1;
+                                mapState[h][y] = mapState[h + 1][y];
+                                mapState[h + 1][y] = 0;
+                            }
+                            mapState[h][0] = mapState[h + 1][0];
+                            mapState[h + 1][0] = 0;
+                        }
+                    }
+
+
+                    t_a = 0;
+                    resultA = 1;
+                    resultB = 1;
+                    if (this.checkState()) {
+                        this.killResult();
+                        this.play();
+                        this.createResult();
+                    } else {
+                        this.win();
+                    }
+
+
+                }
+            } else {
+                for (i = 0; i < t_a; i++) {
+                    result[i].select = false;
+                }
+                result[0] = child;
+                child.select = true;
+                t_a = 1;
+                resultB = child.val;
+            }
+        }
     },
 
     createResult: function () {
+
         this.resultBlock = game.add.sprite(560, 30, 'block');
         this.resultBlock.frame = 12;
-        this.resultBlock.scale.setTo(0.5);
+        this.resultBlock.scale.setTo(0.6);
         this.resultBlock.anchor.setTo(0.5);
         this.game.physics.enable(this.resultBlock);
         this.resultBlock.body.velocity.y = block_speed;
@@ -108,8 +199,25 @@ var GameState = {
         this.resultText.body.velocity.y = block_speed;
     },
 
-    updateResult: function () {
-        this.resultText.setText(resultA);
+    killResult: function () {
+        this.resultBlock.kill();
+        this.resultText.kill();
+    },
+
+    updateBlockResult: function () {
+
+        if (block_stop <= 30) {
+            console.log('game over');
+            game.state.start('Home');
+        } else {
+            if (GameState.resultBlock.y >= block_stop) {
+                GameState.resultBlock.body.velocity.y = 0;
+                block_stop -= 50;
+                GameState.resultText.kill();
+                this.play();
+                this.createResult();
+            }
+        }
     },
 
     play: function () {
@@ -117,32 +225,93 @@ var GameState = {
             x = Math.floor(Math.random() * 6 + 1);
             y = Math.floor(Math.random() * 6 + 1);
         } while (mapState[x][y] == 0);
-        resultA *= mapState[x][y];
+        resultA = mapState[x][y];
         console.log(resultA + ':' + x + '-' + y);
         t = 0;
-        do {
-            a = Math.floor(Math.random() * 4 + 1);
-            switch (a) {
+        while (t == 0) {
+            l = Math.floor(Math.random() * 4 + 1);
+            switch (l) {
                 case 1:
-                    if (mapState[x - 1][y] != 0) t = mapState[x - 1][y];
+                    if (x > 1) {
+                        if (mapState[x - 1][y] != 0) t = mapState[x - 1][y];
+                        console.log(t + ':' + (x - 1) + '-' + y);
+                    }
                     break;
                 case 2:
                     if (x < 6) {
                         if (mapState[x + 1][y] != 0) t = mapState[x + 1][y];
+                        console.log(t + ':' + (x + 1) + '-' + y);
                     }
-
                     break;
                 case 3:
-                    if (mapState[x][y - 1] != 0) t = mapState[x][y - 1];
+                    if (y > 1) {
+                        if (mapState[x][y - 1] != 0) t = mapState[x][y - 1];
+                        console.log(t + ':' + x + '-' + (y - 1));
+                    }
                     break;
                 case 4:
                     if (y < 6) {
                         if (mapState[x][y + 1] != 0) t = mapState[x][y + 1];
+                        console.log(t + ':' + x + '-' + (y + 1));
                     }
                     break;
             }
-        } while (t === 0)
+        }
         resultA *= t;
-        this.updateResult();
+
+    },
+
+    updateMap: function () {
+
+
+
+        for (i = 0; i < 36; i++) {
+            if (GameState.block.children[i].select == true) {
+                c_d = GameState.block.children[i];
+                c_d.selected.x = c_d.x;
+                c_d.selected.y = c_d.y;
+                c_d.selected.animations.play('select');
+            } else {
+                c_d = GameState.block.children[i];
+                c_d.selected.x = c_d.x;
+                c_d.selected.y = c_d.y;
+                c_d.selected.animations.play('no');
+            }
+        }
+    },
+
+    createSelect: function () {
+        selected = game.add.sprite(-20, -20, 'select');
+        selected.animations.add('select', [1, 2], 2, true);
+        selected.animations.add('no', [0], 2, false);
+        selected.anchor.setTo(0.5);
+        selected.scale.setTo(0.5);
+
+        return selected;
+    },
+
+    checkState: function () {
+        for (i = 1; i < 7; i++) {
+            for (j = 1; j < 7; j++) {
+                if (mapState[i][j] != 0) return true;
+            }
+        }
+        return false;
+    },
+
+    win: function () {
+        game.state.start('State');
+    },
+
+    createBlockDead: function () {
+        if (block_stop < 450) {
+            n = (450 - block_stop) / 50;
+            for (i = 0; i < n; i++) {
+                this.deadBlock = game.add.sprite(560, 450 - i * 50, 'block');
+                this.deadBlock.frame = 12;
+                this.deadBlock.scale.setTo(0.6);
+                this.deadBlock.anchor.setTo(0.5);
+            }
+        }
     }
 }
