@@ -19,7 +19,8 @@ var Preload = {
         this.load.audio('snd3', 'Multiplication/assets/sndComet.mp3');
         this.load.audio('snd4', 'Multiplication/assets/sndDestroyBlock.mp3');
         this.load.audio('snd5', 'Multiplication/assets/sndDropWall.mp3');
-        this.load.audio('snd8', 'Multiplication/assets/sndTick.mp3');
+        this.load.audio('snd6', 'Multiplication/assets/sndTick.mp3');
+        this.load.audio('snd7', 'Multiplication/assets/sndMedal.mp3');
 
     },
 

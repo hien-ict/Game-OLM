@@ -17,6 +17,7 @@ var GameState = {
         this.play();
         this.createResult();
         this.game.time.events.loop(Phaser.Timer.SECOND, this.updateTime, this);
+        this.createSnd();
 
     },
 
@@ -71,6 +72,7 @@ var GameState = {
     },
 
     control: function (child) {
+        this.snd2.play();
         if (t_a == 0 && child.select == false) {
             result[t_a] = child;
             child.select = true;
@@ -86,6 +88,7 @@ var GameState = {
                 resultB *= (child.val);
 
                 if (resultB == resultA) {
+                    this.snd4.play();
                     for (k = 0; k < t_a; k++) {
                         result[k].kill();
                         result[k].select = false;
@@ -213,6 +216,7 @@ var GameState = {
             game.state.start('Home');
         } else {
             if (GameState.resultBlock.y >= block_stop) {
+                this.snd5.play();
                 GameState.resultBlock.body.velocity.y = 0;
                 block_stop -= 50;
                 GameState.resultText.kill();
@@ -333,7 +337,7 @@ var GameState = {
             stroke: "#ff0000",
             strokeThickness: 2
         }
-        this.level = game.add.text(20, 30, "LEVEL: " , style2);
+        this.level = game.add.text(20, 30, "LEVEL: ", style2);
         this.level = game.add.text(120, 30, state, style);
         this.time = game.add.text(20, 80, "TIME:", style2);
         this.time = game.add.text(100, 80, "1:30", style);
@@ -341,21 +345,37 @@ var GameState = {
 
     updateTime() {
         time--;
-        if (time>=60){
-            if (time-60>=10){
-                this.time.setText("1:"+(time-60));
-            }else{
-                this.time.setText("1:0"+(time-60));
+        if (time >= 60) {
+            if (time - 60 >= 10) {
+                this.time.setText("1:" + (time - 60));
+            } else {
+                this.time.setText("1:0" + (time - 60));
             }
-        }else{
-            if (time>=10){
-                this.time.setText("0:"+(time));
-            }else{
-                this.time.setText("0:0"+(time));
+        } else {
+            if (time >= 10) {
+                if (time == 10) this.snd6.play();
+                this.time.setText("0:" + (time));
+            } else {
+
+                this.time.setText("0:0" + (time));
             }
 
         }
+        if (time < 0) {
+            game.time.events.add(Phaser.Timer.SECOND * 2, function () {
+                game.state.start('Home');
+            });
 
+        }
     },
 
+    createSnd: function () {
+        this.snd1 = game.add.audio('snd1');
+        this.snd2 = game.add.audio('snd2');
+        this.snd3 = game.add.audio('snd3');
+        this.snd4 = game.add.audio('snd4');
+        this.snd5 = game.add.audio('snd5');
+        this.snd6 = game.add.audio('snd6');
+        this.snd7 = game.add.audio('snd7');
+    }
 }

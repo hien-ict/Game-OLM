@@ -4,6 +4,8 @@ var State = {
     },
 
     create: function () {
+        this.snd7= game.add.audio('snd7');
+        this.snd7.play();
         this.background = game.add.sprite(0, 0, 'background');
         //this.background.scale.setTo(0.2);
         var style2 = {
@@ -20,7 +22,7 @@ var State = {
             stroke: "#8df51e",
             strokeThickness: 2
         };
-
+        state++;
         block_speed+=5;
         this.text = game.add.text(320, 350, 'CLICK TO CONTINUE', style2);
         if (this.message) {
