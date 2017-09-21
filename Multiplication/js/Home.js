@@ -5,6 +5,7 @@ var Home = {
 
     create: function () {
         block_stop = 450;
+        round=1; score=0;
         this.background = game.add.sprite(0, 0, 'background');
         //this.background.scale.setTo(0.2);
         var style2 = {

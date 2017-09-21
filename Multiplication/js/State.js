@@ -22,12 +22,14 @@ var State = {
             stroke: "#8df51e",
             strokeThickness: 2
         };
-        state++;
+        round++;
         block_speed+=5;
-        this.text = game.add.text(320, 350, 'CLICK TO CONTINUE', style2);
         if (this.message) {
-            this.text = game.add.text(320, 20, this.message, style);
+            this.text = game.add.text(320, 100, this.message, style);
         }
+        this.text.anchor.setTo(0.5);
+
+        this.text = game.add.text(320, 350, 'CLICK TO CONTINUE', style2);
         this.text.inputEnabled = true;
         this.text.events.onInputDown.add(function () {
             this.state.start('GameState');

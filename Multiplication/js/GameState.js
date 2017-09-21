@@ -3,13 +3,17 @@ result = new Array(4).fill(0);
 t_a = 0;
 block_speed = 40;
 block_stop = 450;
-state = 1;
+state = 'play';
+round = 1;
+score = 0;
 var GameState = {
 
     create: function () {
-        time = 90;
+        state="play";
+        time = 120;
         this.background = game.add.sprite(0, 0, 'background');
         this.createTime();
+        this.createScore();
         this.createBlockDead();
         this.createBlock();
         this.createMapState();
@@ -18,12 +22,13 @@ var GameState = {
         this.createResult();
         this.game.time.events.loop(Phaser.Timer.SECOND, this.updateTime, this);
         this.createSnd();
-
+        this.snd8.play();
     },
 
     update: function () {
         this.updateBlockResult();
         this.updateMap();
+        this.winBonus();
     },
 
     createBlock: function () {
@@ -88,6 +93,8 @@ var GameState = {
                 resultB *= (child.val);
 
                 if (resultB == resultA) {
+                    score += 50;
+                    this.updateScore()
                     this.snd4.play();
                     for (k = 0; k < t_a; k++) {
                         result[k].kill();
@@ -212,8 +219,7 @@ var GameState = {
     updateBlockResult: function () {
 
         if (block_stop <= 30) {
-            console.log('game over');
-            game.state.start('Home');
+            this.gameover();
         } else {
             if (GameState.resultBlock.y >= block_stop) {
                 this.snd5.play();
@@ -268,9 +274,6 @@ var GameState = {
     },
 
     updateMap: function () {
-
-
-
         for (i = 0; i < 36; i++) {
             if (GameState.block.children[i].select == true) {
                 c_d = GameState.block.children[i];
@@ -306,7 +309,10 @@ var GameState = {
     },
 
     win: function () {
-        game.state.start('State');
+        state = "win";
+        game.time.events.add(Phaser.Timer.SECOND * 5, function () {
+            game.state.start('State', true, false, "Chúc mừng bạn đã qua vòng "+ round+"\n Điểm của bạn là: "+score);
+        });
     },
 
     createBlockDead: function () {
@@ -322,7 +328,6 @@ var GameState = {
     },
 
     createTime: function () {
-        console.log("time");
         style = {
             font: '25px Times New Roman',
             fill: '#fff',
@@ -338,13 +343,16 @@ var GameState = {
             strokeThickness: 2
         }
         this.level = game.add.text(20, 30, "LEVEL: ", style2);
-        this.level = game.add.text(120, 30, state, style);
+        this.level = game.add.text(120, 30, round, style);
         this.time = game.add.text(20, 80, "TIME:", style2);
         this.time = game.add.text(100, 80, "1:30", style);
     },
 
     updateTime() {
-        time--;
+        if (state == "play") {
+            time--;
+        }
+
         if (time >= 60) {
             if (time - 60 >= 10) {
                 this.time.setText("1:" + (time - 60));
@@ -361,12 +369,32 @@ var GameState = {
             }
 
         }
-        if (time < 0) {
-            game.time.events.add(Phaser.Timer.SECOND * 2, function () {
-                game.state.start('Home');
-            });
-
+        if (time <= 0) {
+            this.gameover();
         }
+    },
+
+    createScore: function () {
+        style = {
+            font: '30px Times New Roman',
+            fill: '#fff',
+            align: "center",
+            stroke: "#ff0000",
+            strokeThickness: 2
+        }
+        style2 = {
+            font: '30px Times New Roman',
+            fill: '#f00',
+            align: "center",
+            stroke: "#e00",
+            strokeThickness: 1
+        }
+        this.score = game.add.text(250, 20, "SCORE: ", style2);
+        this.score = game.add.text(370, 20, score, style);
+    },
+
+    updateScore: function () {
+        this.score.setText(score);
     },
 
     createSnd: function () {
@@ -377,5 +405,40 @@ var GameState = {
         this.snd5 = game.add.audio('snd5');
         this.snd6 = game.add.audio('snd6');
         this.snd7 = game.add.audio('snd7');
+        this.snd8 = game.add.audio('snd8');
+    },
+
+    gameover: function () {
+        style = {
+            font: '45px Times New Roman',
+            fill: '#fff',
+            align: "center",
+            stroke: "#ff0000",
+            strokeThickness: 2
+        }
+        if (state == "play") {
+            this.snd1.play();
+            this.killResult();
+            this.block.setAll('alpha', 0.5);
+            this.message = game.add.text(320, 250, 'GAME OVER!', style);
+            this.message.anchor.setTo(0.5);
+            game.time.events.add(Phaser.Timer.SECOND * 5, function () {
+                game.state.start('Home');
+            });
+        }
+        state = "gameover";
+    },
+
+    winBonus: function () {
+        if (state == "win") {
+            time -= 2;
+            this.snd6.stop();
+            this.snd8.play();
+            score += 5;
+            if(time<=0) time=0;
+            this.updateTime();
+            this.updateScore();
+            this.killResult();
+        }
     }
 }
