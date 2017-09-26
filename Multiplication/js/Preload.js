@@ -48,8 +48,7 @@ var Preload = {
         this.nhan.anchor.setTo(0.5);
         this.nhan.inputEnabled = true;
         this.nhan.events.onInputDown.add(function () {
-            this.state.start('Home');
-
+            this.state.start('Home', true, false, 'nhan');
         }, this);
 
         this.nhan.events.onInputOver.add(this.over, this.nhan);
@@ -58,9 +57,26 @@ var Preload = {
 
         this.cong = game.add.text(200, 350, "Phép cộng", style);
         this.cong.anchor.setTo(0.5);
+        this.cong.inputEnabled = true;
+        this.cong.events.onInputDown.add(function () {
+            this.state.start('Home', true, false, 'cong');
+        }, this);
+
+        this.cong.events.onInputOver.add(this.over, this.cong);
+        this.cong.events.onInputOut.add(this.out, this.cong);
+        this.cong.input.useHandCursor = true;
+
         this.tru = game.add.text(440, 350, "Phép trừ", style);
         this.tru.anchor.setTo(0.5);
-        //this.state.start('Home');
+        this.tru.inputEnabled = true;
+        this.tru.events.onInputDown.add(function () {
+            this.state.start('Home', true, false, 'tru');
+        }, this);
+
+        this.tru.events.onInputOver.add(this.over, this.tru);
+        this.tru.events.onInputOut.add(this.out, this.tru);
+        this.tru.input.useHandCursor = true;
+
     },
 
     out() {

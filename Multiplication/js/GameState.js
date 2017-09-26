@@ -8,6 +8,9 @@ var resultA = 1,
     round = 1,
     score = 0;
 var GameState = {
+    init: function (message) {
+        this.message = message;
+    },
 
     create: function () {
         state = "play";
