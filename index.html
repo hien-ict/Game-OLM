@@ -2,48 +2,49 @@
 <html>
 
 	<head>
-		<meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
-		<title>Game OLM.vn</title>
-		<script type="text/javascript" src="z/phaser.min.js"></script>
-		<style>
-		  body {
-		    padding: 0px;
-		    margin: 0px;
-		  }
-		  </style>
-	</head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <title>Game OLM.vn</title>
+    <script type="text/javascript" src="z/phaser.min.js"></script>
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+</head>
 
-	<body>
-		<script type="text/javascript">
-			//Fix 1 số giá trị tĩnh trên local
-			var Cf = function(){};
-			Cf.loadScript = function()
-			{
-				console.log('Khởi tạo bộ câu hỏi');
-			}
-			Cf.next = function(){
-				console.log('Hiển thị câu hỏi');
-			}
-			Cf.popup = 0;
-			Cf.resq = -1;
-			Cf.waiting = 0;
-		</script>
-		<!-- Đoạn code này sẽ được thay thế bằng đoạn code tương ứng trên host -->
+<body>
+    <script type="text/javascript">
+        //Fix 1 số giá trị tĩnh trên local
+        var Cf = function() {};
+        Cf.loadScript = function() {
+            console.log('Khởi tạo bộ câu hỏi');
+        }
+        Cf.next = function() {
+            console.log('Hiển thị câu hỏi');
+        }
+        Cf.popup = 0;
+        Cf.resq = -1;
+        Cf.waiting = 0;
+    </script>
+    <!-- Đoạn code này sẽ được thay thế bằng đoạn code tương ứng trên host -->
+
 
 		<script src="Multiplication/js/Preload.js"></script>
 		<script	src="Multiplication/js/GameState.js" ></script>
 		<script src="Multiplication/js/Home.js"></script>
 		<script src="Multiplication/js/State.js"></script>
 		<script src="Multiplication/js/Multiplication.js"></script>
-<!--
-        <script src="SpaceRacer/js/Preload.js"></script>
-        <script src="SpaceRacer/js/Home.js"></script>
-		<script src="SpaceRacer/js/State1.js"></script>
-		<script src="SpaceRacer/js/ship.js"></script>
--->
 
 <!--
+    <script src="SpaceRacer/js/Preload.js"></script>
+<script src="SpaceRacer/js/Home.js"></script>
+<script src="SpaceRacer/js/State1.js"></script>
+<script src="SpaceRacer/js/ship.js"></script>
+-->
+
+    <!--
 		<script src="Mario/js/Preload.js"></script>
 		<script	src="Mario/js/State1_1.js" ></script>
 		<script	src="Mario/js/State1_2.js" ></script>
@@ -51,8 +52,8 @@
 		<script	src="Mario/js/State1_4.js" ></script>
 		<script src="Mario/js/mario.js"></script>
 -->
-<!--		<script src="battership/js/preload.js"></script>-->
-<!--		<script src="battership/js/ship.js"></script>-->
-<!--		<script src="Mario/js/main.js"></script>-->
-	</body>
+    <!--		<script src="battership/js/preload.js"></script>-->
+    <!--		<script src="battership/js/ship.js"></script>-->
+    <!--		<script src="Mario/js/main.js"></script>-->
+</body>
 </html>

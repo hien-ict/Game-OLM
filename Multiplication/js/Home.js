@@ -5,7 +5,8 @@ var Home = {
 
     create: function () {
         block_stop = 450;
-        round=1; score=0;
+        round = 1;
+        score = 0;
         this.background = game.add.sprite(0, 0, 'background');
         //this.background.scale.setTo(0.2);
         var style2 = {
@@ -40,19 +41,16 @@ var Home = {
         this.text.input.useHandCursor = true;
         this.text.anchor.setTo(0.5);
     },
+
     update: function () {
 
     },
 
     out() {
-
         this.text.fill = "#fff";
-
     },
 
     over() {
-
         this.text.fill = '#ff00ff';
-
     }
 }

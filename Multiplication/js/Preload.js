@@ -8,6 +8,7 @@ var Preload = {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
     },
+
     preload: function () {
         this.load.spritesheet('block', 'Multiplication/assets/Block_1.png', 100, 100, 15);
         this.load.spritesheet('select', 'Multiplication/assets/select.png', 100, 100, 3);
@@ -26,6 +27,47 @@ var Preload = {
     },
 
     create: function () {
-        this.state.start('Home');
+        var style2 = {
+            font: '35px Arial',
+            fill: '#fff',
+            align: "center",
+            stroke: "#ff0000",
+            strokeThickness: 2
+        };
+        var style = {
+            font: '30px Arial',
+            fill: '#fff',
+            align: "center",
+            stroke: "#8df51e",
+            strokeThickness: 2
+        };
+        this.background = game.add.sprite(0, 0, 'background');
+
+
+        this.nhan = game.add.text(320, 200, "Phép nhân", style);
+        this.nhan.anchor.setTo(0.5);
+        this.nhan.inputEnabled = true;
+        this.nhan.events.onInputDown.add(function () {
+            this.state.start('Home');
+
+        }, this);
+
+        this.nhan.events.onInputOver.add(this.over, this.nhan);
+        this.nhan.events.onInputOut.add(this.out, this.nhan);
+        this.nhan.input.useHandCursor = true;
+
+        this.cong = game.add.text(200, 350, "Phép cộng", style);
+        this.cong.anchor.setTo(0.5);
+        this.tru = game.add.text(440, 350, "Phép trừ", style);
+        this.tru.anchor.setTo(0.5);
+        //this.state.start('Home');
+    },
+
+    out() {
+        this.fill = "#fff";
+    },
+
+    over() {
+        this.fill = '#ff00ff';
     }
 }
