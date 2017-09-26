@@ -1,15 +1,16 @@
-resultA = 1, resultB = 1;
-result = new Array(4).fill(0);
-t_a = 0;
-block_speed = 40;
-block_stop = 450;
-state = 'play';
-round = 1;
-score = 0;
+var resultA = 1,
+    resultB = 1,
+    result = new Array(4).fill(0),
+    t_a = 0,
+    block_speed = 40,
+    block_stop = 450,
+    state = 'play',
+    round = 1,
+    score = 0;
 var GameState = {
 
     create: function () {
-        state="play";
+        state = "play";
         time = 120;
         this.background = game.add.sprite(0, 0, 'background');
         this.createTime();
@@ -130,7 +131,7 @@ var GameState = {
                                     if (GameState.block.children[o].u == h + 2 && GameState.block.children[o].v == y) {
                                         r = GameState.block.children[o]
                                     }
-                                };
+                                }
                                 tween = game.add.tween(r);
                                 tween.to({
                                     x: 150 + (h) * 50
@@ -151,7 +152,7 @@ var GameState = {
                                     if (GameState.block.children[o].u == h + 1 && GameState.block.children[o].v == y) {
                                         r = GameState.block.children[o]
                                     }
-                                };
+                                }
                                 tween = game.add.tween(r);
                                 tween.to({
                                     x: 150 + (h) * 50
@@ -311,7 +312,7 @@ var GameState = {
     win: function () {
         state = "win";
         game.time.events.add(Phaser.Timer.SECOND * 5, function () {
-            game.state.start('State', true, false, "Chúc mừng bạn đã qua vòng "+ round+"\n Điểm của bạn là: "+score);
+            game.state.start('State', true, false, "Chúc mừng bạn đã qua vòng " + round + "\n Điểm của bạn là: " + score);
         });
     },
 
@@ -348,7 +349,7 @@ var GameState = {
         this.time = game.add.text(100, 80, "1:30", style);
     },
 
-    updateTime() {
+    updateTime: function () {
         if (state == "play") {
             time--;
         }
@@ -435,7 +436,7 @@ var GameState = {
             this.snd6.stop();
             this.snd8.play();
             score += 5;
-            if(time<=0) time=0;
+            if (time <= 0) time = 0;
             this.updateTime();
             this.updateScore();
             this.killResult();
