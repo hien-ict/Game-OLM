@@ -1,4 +1,4 @@
-var state1 = 'play',
+var state1 = 0,
     state = '',
     lx = 0,
     length = 0,
@@ -84,10 +84,10 @@ var State1 = {
     },
 
     update: function () {
-
-        if (state1 == 'play') {
-            state1 = 'waiting';
-            this.game.time.events.add(Phaser.Timer.SECOND * Loop, this.ranObj, this);
+        state1++;
+        if (state1 >= 300) {
+            state1 = 0;
+            this.ranObj();
         }
         this.asteroids.forEach(this.kill, this, true, 600);
 
@@ -114,7 +114,7 @@ var State1 = {
             b = Math.floor(Math.random() * 3 + 1);
         }
 
-        state1 = 'play';
+        //state1 = 'play';
         Loop -= 0.1;
         if (Loop <= 3) {
             Loop = 3;
@@ -164,7 +164,7 @@ var State1 = {
     },
 
     updateQuestion: function () {
-        do{
+        do {
             a = Math.floor(Math.random() * 9 + 1);
             b = Math.floor(Math.random() * 9 + 1);
             c = Math.floor(Math.random() * 9 + 1);
