@@ -22,9 +22,9 @@ var State1 = {
     create: function () {
         score = 0;
         state = 'play';
-        state1 = 'play';
+        state1 = 0;
         state2 = 'play';
-        Loop = 6;
+        Loop = 400;
         Vel = 80;
         this.background = this.add.tileSprite(0, 0, 420, 640, 'background');
         this.background.autoScroll(0, 30);
@@ -85,7 +85,8 @@ var State1 = {
 
     update: function () {
         state1++;
-        if (state1 >= 300) {
+
+        if (state1 >= Loop) {
             state1 = 0;
             this.ranObj();
         }
@@ -115,9 +116,10 @@ var State1 = {
         }
 
         //state1 = 'play';
-        Loop -= 0.1;
-        if (Loop <= 3) {
-            Loop = 3;
+        Loop -= 5;
+        console.log(Loop);
+        if (Loop <= 200) {
+            Loop = 200;
         }
         if (Vel >= 200) {
             Vel = 200;

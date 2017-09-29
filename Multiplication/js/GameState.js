@@ -13,6 +13,17 @@ var GameState = {
     },
 
     create: function () {
+        if (this.message == "nhan") {
+            resultB = 1;
+        } else {
+            if (this.message == "cong") {
+                resultB = 0;
+            } else {
+                if (this.message == "tru") {
+                    resultB = 0;
+                }
+            }
+        }
         state = "play";
         time = 120;
         this.background = game.add.sprite(0, 0, 'background');
@@ -86,7 +97,18 @@ var GameState = {
             result[t_a] = child;
             child.select = true;
             t_a++;
-            resultB *= (child.val);
+            if (this.message == "nhan") {
+                resultB *= (child.val);
+            } else {
+                if (this.message == "cong") {
+                    resultB += (child.val);
+                } else {
+                    if (this.message == "tru") {
+                        resultB = (child.val);
+                    }
+                }
+            }
+
         }
 
         if (t_a > 0 && child.select == false) {
@@ -94,7 +116,17 @@ var GameState = {
                 child.select = true;
                 result[t_a] = child;
                 t_a++;
-                resultB *= (child.val);
+                if (this.message == "nhan") {
+                    resultB *= (child.val);
+                } else {
+                    if (this.message == "cong") {
+                        resultB += (child.val);
+                    } else {
+                        if (this.message == "tru") {
+                            resultB -= (child.val);
+                        }
+                    }
+                }
 
                 if (resultB == resultA) {
                     score += 50;
@@ -173,7 +205,17 @@ var GameState = {
 
                     t_a = 0;
                     resultA = 1;
-                    resultB = 1;
+                    if (this.message == "nhan") {
+                        resultB = 1;
+                    } else {
+                        if (this.message == "cong") {
+                            resultB = 0;
+                        } else {
+                            if (this.message == "tru") {
+                                resultB = 0;
+                            }
+                        }
+                    }
                     if (this.checkState()) {
                         this.killResult();
                         this.play();
@@ -273,8 +315,20 @@ var GameState = {
                     break;
             }
         }
-        resultA *= t;
 
+        if (this.message == "nhan") {
+            resultA *= t;
+        } else {
+            if (this.message == "cong") {
+                resultA += t;
+                console.log(resultA);
+            } else {
+                if (this.message == "tru") {
+                    resultA -= t;
+                    console.log(resultA);
+                }
+            }
+        }
     },
 
     updateMap: function () {

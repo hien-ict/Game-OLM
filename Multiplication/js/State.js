@@ -4,7 +4,7 @@ var State = {
     },
 
     create: function () {
-        this.snd7= game.add.audio('snd7');
+        this.snd7 = game.add.audio('snd7');
         this.snd7.play();
         this.background = game.add.sprite(0, 0, 'background');
         //this.background.scale.setTo(0.2);
@@ -23,7 +23,8 @@ var State = {
             strokeThickness: 2
         };
         round++;
-        block_speed+=5;
+        block_speed += 2;
+        console.log(block_speed);
         if (this.message) {
             this.text = game.add.text(320, 100, this.message, style);
         }
@@ -32,7 +33,7 @@ var State = {
         this.text = game.add.text(320, 350, 'CLICK TO CONTINUE', style2);
         this.text.inputEnabled = true;
         this.text.events.onInputDown.add(function () {
-            this.state.start('GameState');
+            this.state.start('GameState', true, false, Home.message);
         }, this);
 
         this.text.events.onInputOver.add(this.over, this);

@@ -27,12 +27,12 @@ var Home = {
         this.introduce.anchor.setTo(0.5);
 
         this.text = game.add.text(320, 350, 'CLICK TO START', style2);
-//        if (this.message) {
-    //            this.text = game.add.text(320, 20, this.message, style);
-    //        }
+        //        if (this.message) {
+        //            this.text = game.add.text(320, 20, this.message, style);
+        //        }
         this.text.inputEnabled = true;
         this.text.events.onInputDown.add(function () {
-            this.state.start('GameState');
+            this.state.start('GameState', true, false, Home.message);
 
         }, this);
 
