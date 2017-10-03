@@ -23,8 +23,27 @@ var Home = {
             stroke: "#8df51e",
             strokeThickness: 2
         };
-        this.introduce = game.add.text(320, 150, 'Luật chơi:\n Các bạn phải chọn 2 ô liên kề có tích\n giá trị của 2 ô đó bằng ô kết quả bên phải.\n Thời gian mỗi vòng chơi là 90 giây.\n Hãy nhanh lên nào!', style)
-        this.introduce.anchor.setTo(0.5);
+        switch (this.message) {
+            case 'nhan':
+                {
+                    this.introduce = game.add.text(320, 150, 'Luật chơi: PHÉP NHÂN\n Các bạn phải chọn 2 ô liên kề có "TÍCH"\n giá trị của 2 ô đó bằng ô kết quả bên phải.\n Thời gian mỗi vòng chơi là 90 giây.\n Hãy nhanh lên nào!', style)
+                    this.introduce.anchor.setTo(0.5);
+                    break;
+                }
+            case 'cong':
+                {
+                    this.introduce = game.add.text(320, 150, 'Luật chơi: PHÉP CỘNG\n Các bạn phải chọn 2 ô liên kề có "TỔNG"\n giá trị của 2 ô đó bằng ô kết quả bên phải.\n Thời gian mỗi vòng chơi là 90 giây.\n Hãy nhanh lên nào!', style)
+                    this.introduce.anchor.setTo(0.5);
+                    break;
+                }
+            case 'tru':
+                {
+                    this.introduce = game.add.text(320, 150, 'Luật chơi: PHÉP TRỪ\n Các bạn phải chọn 2 ô liên kề có "HIỆU"\n giá trị của 2 ô đó bằng ô kết quả bên phải.\n Thời gian mỗi vòng chơi là 90 giây.\n Hãy nhanh lên nào!', style)
+                    this.introduce.anchor.setTo(0.5);
+                    break;
+                }
+        }
+
 
         this.text = game.add.text(320, 350, 'CLICK TO START', style2);
         //        if (this.message) {

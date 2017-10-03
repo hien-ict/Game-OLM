@@ -358,9 +358,13 @@ var GameState = {
     },
 
     checkState: function () {
+        dem = 0;
         for (i = 1; i < 7; i++) {
             for (j = 1; j < 7; j++) {
-                if (mapState[i][j] != 0) return true;
+                if (mapState[i][j] != 0) {
+                    dem++;
+                    if (dem > 1) return true;
+                }
             }
         }
         return false;

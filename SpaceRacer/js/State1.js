@@ -117,7 +117,7 @@ var State1 = {
 
         //state1 = 'play';
         Loop -= 5;
-        console.log(Loop);
+
         if (Loop <= 200) {
             Loop = 200;
         }
@@ -173,11 +173,25 @@ var State1 = {
             d = Math.floor(Math.random() * 9 + 1);
         } while (a * b == c * d)
 
-
-        this.textLeft.setText(a + 'x' + b);
-        resultLeft = a * b;
-        this.textRight.setText(c + 'x' + d);
-        resultRight = c * d;
+        h = Math.floor(Math.random() * 2);
+        k = Math.floor(Math.random() * 2);
+        if (h == 0) {
+            this.textLeft.setText(a * b + ':' + b);
+            resultLeft = a;
+        } else {
+            this.textLeft.setText(a + 'x' + b);
+            resultLeft = a * b;
+        }
+        if (k == 0) {
+            this.textRight.setText(c * d + ':' + d);
+            resultRight = c;
+        } else {
+            this.textRight.setText(c + 'x' + d);
+            resultRight = c * d;
+        }
+        if (resultLeft == resultRight) {
+            this.updateQuestion();
+        }
     },
 
     play: function () {
