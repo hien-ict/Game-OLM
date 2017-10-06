@@ -17,14 +17,14 @@ var GameState = {
                 r_play.anchor.setTo(0.5);
                 r_play.inputEnabled = true;
                 r_play.input.useHandCursor = true;
-                r_play.events.onInputDown.add(this.control, this);
+                r_play.events.onInputDown.add(this.control, r_play);
+                block[i][j] = r_play;
+                r_play.val = f_n[i][j];
                 r_play.u = i;
                 r_play.v = j;
-                r_play.val = f_n[i][j];
-                console.log(r_play.val);
             }
-            console.log("break");
         }
+        graphics = game.add.graphics(-44.5, -23.5);
 
         this.createNum();
         this.refresh = game.add.sprite(20, 20, 'rec');
@@ -32,6 +32,12 @@ var GameState = {
         this.refresh.anchor.setTo(0.05);
         this.refresh.inputEnabled = true;
         this.refresh.events.onInputDown.add(this.ref, this);
+
+        this.check = game.add.sprite(100, 20, 'rec');
+        this.check.scale.setTo(0.05);
+        this.check.anchor.setTo(0.05);
+        this.check.inputEnabled = true;
+        this.check.events.onInputDown.add(this.checkState, this);
 
         this.Zero = game.input.keyboard.addKey(Phaser.Keyboard.ZERO);
         this.One = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -63,7 +69,7 @@ var GameState = {
 
     update: function () {
         this.keypress();
-        if (this.checkState()) this.win();
+        //if (this.checkState()) this.win();
     },
 
     createArr: function () {
@@ -74,6 +80,14 @@ var GameState = {
         result = new Array(6).fill('');
         result.forEach(function (x, i) {
             result[i] = new Array(i + 1).fill('');
+        });
+        block = new Array(6).fill('');
+        block.forEach(function (x, i) {
+            block[i] = new Array(i + 1).fill('');
+        });
+        text = new Array(6).fill('');
+        text.forEach(function (x, i) {
+            text[i] = new Array(i + 1).fill('');
         });
     },
 
@@ -90,15 +104,26 @@ var GameState = {
         }
     },
 
-    control: function (block) {
-        i = block.u;
-        j = block.v;
+    control: function (blo) {
+
+        i = blo.u;
+        j = blo.v;
+
+        //graphics.lineColor(0xff0000);
+        //graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
         kq.val = result[i][j];
         kq.u = i;
         kq.v = j;
-        GameState.result = game.add.text(320 + 96 * block.v - 48 * block.u, 200 + 53 * block.u, '');
+        console.log(kq.u + "-" + kq.v);
+        if (result[i][j] == '') {
+            text_result = game.add.text(320 + 96 * blo.v - 48 * blo.u, 200 + 53 * blo.u, '');
+            text[i][j] = text_result;
+        } else {
+            text[i][j].setText(result[i][j]);
+        }
         console.log(result[i][j]);
-        GameState.result.anchor.setTo(0.5);
+        text_result.anchor.setTo(0.5);
+
     },
 
     ref: function () {
@@ -106,13 +131,133 @@ var GameState = {
     },
 
     createNum: function () {
-        for (i = 0; i < GameState.CN; i++) {
-            for (j = 0; j <= i; j++) {
+
+        graphics.beginFill(0x999999);
+        i = 0;
+        j = 0;
+        block[i][j].inputEnabled = false;
+        block[i][j].draw = true;
+        result[i][j] = f_n[i][j];
+        graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+        this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+        this.num_play.anchor.setTo(0.5);
+
+        i = 4;
+        j = 2;
+        block[i][j].inputEnabled = false;
+        block[i][j].draw = true;
+        result[i][j] = f_n[i][j];
+        graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+        this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+        this.num_play.anchor.setTo(0.5);
+
+        type = Math.floor(Math.random() * 3);
+        switch (type) {
+            case 0:
+                i = 2;
+                j = 0;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
                 this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
                 this.num_play.anchor.setTo(0.5);
-                this.num_play.alpha = 0.2;
-            }
+
+                i = 3;
+                j = 0;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                i = 3;
+                j = 2;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                i = 5;
+                j = 3;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                break;
+            case 1:
+                i = 2;
+                j = 2;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                i = 3;
+                j = 1;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                i = 4;
+                j = 3;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                i = 5;
+                j = 3;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                break;
+            case 2:
+                i = 2;
+                j = 2;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                i = 3;
+                j = 1;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                i = 3;
+                j = 3;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                i = 5;
+                j = 2;
+                block[i][j].inputEnabled = false;
+                block[i][j].draw = true;
+                result[i][j] = f_n[i][j];
+                graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                this.num_play = game.add.text(320 + 96 * j - 48 * i, 200 + 53 * i, f_n[i][j]);
+                this.num_play.anchor.setTo(0.5);
+                break;
         }
+        graphics.endFill();
     },
 
     keypress: function () {
@@ -161,23 +306,35 @@ var GameState = {
             this.updateResult();
         }
         if (this.Backspace.justDown) {
-            kq.val = '';
+            length = kq.val.length - 1;
+            kq.val = kq.val.substr(0, length);
             this.updateResult();
         }
     },
 
     updateResult: function () {
-        GameState.result.setText(kq.val);
+        text[kq.u][kq.v].setText(kq.val);
         result[kq.u][kq.v] = kq.val;
     },
 
     checkState: function () {
+
         for (i = 0; i < GameState.CN; i++) {
             for (j = 0; j <= i; j++) {
-                if (result[i][j] != f_n[i][j]) return false;
+                if (result[i][j] != f_n[i][j] && result[i][j] != '') {
+                    graphics.beginFill(0xaa0000);
+                    graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                    graphics.endFill();
+                }
+
+                if (result[i][j] == f_n[i][j] && !block[i][j].draw || result[i][j] == '') {
+                    graphics.beginFill(0xffffff);
+                    graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                    graphics.endFill();
+                }
             }
         }
-        return true;
+
     },
 
     win: function () {
@@ -191,4 +348,7 @@ var GameState = {
         });
         this.text.anchor.setTo(0.5, 0.5);
     },
+
+
+
 }
