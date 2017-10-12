@@ -6,16 +6,13 @@ var Preload = {
     },
 
     preload: function () {
-//        this.load.image('background', 'NumberConundrum/assets/background.jpg');
-//        this.load.image('rec', 'NumberConundrum/assets/rec.jpg');
-//        this.load.image('backspace', 'NumberConundrum/assets/backspace.png');
-//        this.load.image('check', 'NumberConundrum/assets/check.png');
-//        this.load.image('new', 'NumberConundrum/assets/new.png');
-//        this.load.image('instruction', 'NumberConundrum/assets/instructions.png');
+        this.load.image('background', '../NumberConundrum/assets/background.jpg');
+        this.load.image('frac', 'ChiaPhan/assets/frac.png');
+        this.load.text('level', 'ChiaPhan/assets/level.json');
     },
 
     create: function () {
         //game.state.start('Home', true, false, "WELCOME");
-        game.state.start('Home');
+        game.state.start('GameState');
     }
 }

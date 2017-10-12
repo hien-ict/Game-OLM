@@ -23,7 +23,7 @@ var Home = {
             strokeThickness: 2
         };
         this.background = game.add.sprite(0, 0, 'background');
-        this.background = game.add.sprite(0, 50, 'instruction');
+        //this.background = game.add.sprite(0, 50, 'instruction');
         if (this.message) {
             this.text = game.add.text(320, 100, this.message, style);
             this.text.anchor.setTo(0.5);
