@@ -3,6 +3,7 @@ kq = {
     u: 0,
     v: 0
 };
+state = "new";
 var GameState = {
     CN: 6,
 
@@ -108,6 +109,7 @@ var GameState = {
     },
 
     control: function (blo) {
+        state = "play";
         graphics.lineStyle(2, 0xffffff, 1);
         graphics.drawRect(320 + 96 * kq.v - 48 * kq.u, 200 + 53 * kq.u, 89, 48);
         graphics.beginFill(0xffffff);
@@ -132,6 +134,7 @@ var GameState = {
     },
 
     newGame: function () {
+        state = 'new';
         game.state.start("GameState");
     },
 
@@ -278,6 +281,7 @@ var GameState = {
     },
 
     keypress: function () {
+
         if ((this.Zero.justDown) || (this.Num_0.justDown)) {
             this.inputZero();
         }
@@ -363,64 +367,88 @@ var GameState = {
     },
 
     inputZero: function () {
-        kq.val += "0";
-        this.updateResult();
+        if (state == "play") {
+            kq.val += "0";
+            this.updateResult();
+        }
     },
 
     inputOne: function () {
-        kq.val += '1';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '1';
+            this.updateResult();
+        }
     },
 
     inputTwo: function () {
-        kq.val += '2';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '2';
+            this.updateResult();
+        }
     },
 
     inputThree: function () {
-        kq.val += '3';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '3';
+            this.updateResult();
+        }
     },
 
     inputFour: function () {
-        kq.val += '4';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '4';
+            this.updateResult();
+        }
     },
 
     inputFive: function () {
-        kq.val += '5';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '5';
+            this.updateResult();
+        }
     },
 
     inputSix: function () {
-        kq.val += '6';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '6';
+            this.updateResult();
+        }
     },
 
     inputSeven: function () {
-        kq.val += '7';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '7';
+            this.updateResult();
+        }
     },
 
     inputEight: function () {
-        kq.val += '8';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '8';
+            this.updateResult();
+        }
     },
 
     inputNine: function () {
-        kq.val += '9';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '9';
+            this.updateResult();
+        }
     },
 
     inputComma: function () {
-        kq.val += '.';
-        this.updateResult();
+        if (state == "play") {
+            kq.val += '.';
+            this.updateResult();
+        }
     },
 
     inputBackspace: function () {
-        length = kq.val.length - 1;
-        kq.val = kq.val.substr(0, length);
-        this.updateResult();
+        if (state == "play") {
+            length = kq.val.length - 1;
+            kq.val = kq.val.substr(0, length);
+            this.updateResult();
+        }
     },
 
     updateResult: function () {
