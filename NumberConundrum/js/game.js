@@ -5,7 +5,9 @@ kq = {
 };
 var GameState = {
     CN: 6,
+
     create: function () {
+        this.background = game.add.sprite(0, 0, 'background');
         this.createArr();
         this.rec_play = game.add.group();
         this.ranObj();
@@ -27,17 +29,19 @@ var GameState = {
         graphics = game.add.graphics(-44.5, -23.5);
 
         this.createNum();
-        this.refresh = game.add.sprite(20, 20, 'rec');
-        this.refresh.scale.setTo(0.05);
+        this.refresh = game.add.sprite(120, 20, 'new');
+        this.refresh.scale.setTo(0.16);
         this.refresh.anchor.setTo(0.05);
         this.refresh.inputEnabled = true;
-        this.refresh.events.onInputDown.add(this.ref, this);
+        this.refresh.events.onInputDown.add(this.newGame, this);
+        this.refresh.input.useHandCursor = true;
 
-        this.check = game.add.sprite(100, 20, 'rec');
-        this.check.scale.setTo(0.05);
+        this.check = game.add.sprite(400, 20, 'check');
+        this.check.scale.setTo(0.15);
         this.check.anchor.setTo(0.05);
         this.check.inputEnabled = true;
         this.check.events.onInputDown.add(this.checkState, this);
+        this.check.input.useHandCursor = true;
 
         this.Zero = game.input.keyboard.addKey(Phaser.Keyboard.ZERO);
         this.One = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -69,7 +73,6 @@ var GameState = {
 
     update: function () {
         this.keypress();
-        //if (this.checkState()) this.win();
     },
 
     createArr: function () {
@@ -99,18 +102,19 @@ var GameState = {
         }
         for (i = 4; i >= 0; i--) {
             for (j = 0; j <= i; j++) {
-                f_n[i][j] = Math.floor((f_n[i + 1][j] + f_n[i + 1][j + 1]) * 10) / 10;
+                f_n[i][j] = Math.round((f_n[i + 1][j] + f_n[i + 1][j + 1]) * 10) / 10;
             }
         }
     },
 
     control: function (blo) {
-
+        graphics.lineStyle(2, 0xffffff, 1);
+        graphics.drawRect(320 + 96 * kq.v - 48 * kq.u, 200 + 53 * kq.u, 89, 48);
+        graphics.beginFill(0xffffff);
         i = blo.u;
         j = blo.v;
-
-        //graphics.lineColor(0xff0000);
-        //graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+        graphics.lineStyle(2, 0x00ff00, 1);
+        graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
         kq.val = result[i][j];
         kq.u = i;
         kq.v = j;
@@ -123,14 +127,27 @@ var GameState = {
         }
         console.log(result[i][j]);
         text_result.anchor.setTo(0.5);
-
+        graphics.lineStyle(0);
+        graphics.endFill();
     },
 
-    ref: function () {
+    newGame: function () {
         game.state.start("GameState");
     },
 
     createNum: function () {
+        this.createInput(GameState.inputZero, 0);
+        this.createInput(GameState.inputOne, 1);
+        this.createInput(GameState.inputTwo, 2);
+        this.createInput(GameState.inputThree, 3);
+        this.createInput(GameState.inputFour, 4);
+        this.createInput(GameState.inputFive, 5);
+        this.createInput(GameState.inputSix, 6);
+        this.createInput(GameState.inputSeven, 7);
+        this.createInput(GameState.inputEight, 8);
+        this.createInput(GameState.inputNine, 9);
+        this.createInput(GameState.inputComma, ".");
+        this.createInput(GameState.inputBackspace, "/");
 
         graphics.beginFill(0x999999);
         i = 0;
@@ -262,54 +279,148 @@ var GameState = {
 
     keypress: function () {
         if ((this.Zero.justDown) || (this.Num_0.justDown)) {
-            kq.val += "0";
-            this.updateResult();
+            this.inputZero();
         }
         if ((this.One.justDown) || (this.Num_1.justDown)) {
-            kq.val += '1';
-            this.updateResult();
+            this.inputOne();
         }
         if ((this.Two.justDown) || (this.Num_2.justDown)) {
-            kq.val += '2';
-            this.updateResult();
+            this.inputTwo();
         }
         if ((this.Three.justDown) || (this.Num_3.justDown)) {
-            kq.val += '3';
-            this.updateResult();
+            this.inputThree();
         }
         if ((this.Four.justDown) || (this.Num_4.justDown)) {
-            kq.val += '4';
-            this.updateResult();
+            this.inputFour();
         }
         if ((this.Five.justDown) || (this.Num_5.justDown)) {
-            kq.val += '5';
-            this.updateResult();
+            this.inputFive();
         }
         if ((this.Six.justDown) || (this.Num_6.justDown)) {
-            kq.val += '6';
-            this.updateResult();
+            this.inputSix();
         }
         if ((this.Seven.justDown) || (this.Num_7.justDown)) {
-            kq.val += '7';
-            this.updateResult();
+            this.inputSeven();
         }
         if ((this.Eight.justDown) || (this.Num_8.justDown)) {
-            kq.val += '8';
-            this.updateResult();
+            this.inputEight();
         }
         if ((this.Nine.justDown) || (this.Num_9.justDown)) {
-            kq.val += '9';
-            this.updateResult();
+            this.inputNine();
         }
         if ((this.Comma.justDown) || (this.Decimal.justDown)) {
-            kq.val += '.';
-            this.updateResult();
+            this.inputComma();
         }
         if (this.Backspace.justDown) {
-            length = kq.val.length - 1;
-            kq.val = kq.val.substr(0, length);
-            this.updateResult();
+            this.inputBackspace();
         }
+    },
+
+    createInput: function (Fun, Val) {
+        if (Val == ".") {
+            GameState.Obj = game.add.sprite(30 + 50 * 10, 600, "rec");
+            GameState.Obj.scale.setTo(0.055, 0.08);
+            GameState.Obj.anchor.setTo(0.5);
+            GameState.Obj.text = game.add.text(30 + 50 * 10, 605, Val);
+            GameState.Obj.text.anchor.setTo(0.5);
+            GameState.Obj.inputEnabled = true;
+            GameState.Obj.input.useHandCursor = true;
+            GameState.Obj.events.onInputDown.add(Fun, this);
+        } else {
+            if (Val == "/") {
+                GameState.Obj = game.add.sprite(45 + 50 * 11, 600, "backspace");
+                GameState.Obj.scale.setTo(0.095, 0.08);
+                GameState.Obj.anchor.setTo(0.5);
+                GameState.Obj.text = game.add.text(40 + 50 * 11, 605, "");
+                GameState.Obj.text.anchor.setTo(0.5);
+                GameState.Obj.inputEnabled = true;
+                GameState.Obj.input.useHandCursor = true;
+                GameState.Obj.events.onInputDown.add(Fun, this);
+            } else {
+                if (Val == 0) {
+                    GameState.Obj = game.add.sprite(30 + 50 * 9, 600, "rec");
+                    GameState.Obj.scale.setTo(0.055, 0.08);
+                    GameState.Obj.anchor.setTo(0.5);
+                    GameState.Obj.text = game.add.text(30 + 50 * 9, 605, Val);
+                    GameState.Obj.text.anchor.setTo(0.5);
+                    GameState.Obj.inputEnabled = true;
+                    GameState.Obj.input.useHandCursor = true;
+                    GameState.Obj.events.onInputDown.add(Fun, this);
+                } else {
+                    GameState.Obj = game.add.sprite(30 + 50 * (Val - 1), 600, "rec");
+                    GameState.Obj.scale.setTo(0.055, 0.08);
+                    GameState.Obj.anchor.setTo(0.5);
+                    GameState.Obj.text = game.add.text(30 + 50 * (Val - 1), 605, Val);
+                    GameState.Obj.text.anchor.setTo(0.5);
+                    GameState.Obj.inputEnabled = true;
+                    GameState.Obj.input.useHandCursor = true;
+                    GameState.Obj.events.onInputDown.add(Fun, this);
+                }
+
+            }
+        }
+
+    },
+
+    inputZero: function () {
+        kq.val += "0";
+        this.updateResult();
+    },
+
+    inputOne: function () {
+        kq.val += '1';
+        this.updateResult();
+    },
+
+    inputTwo: function () {
+        kq.val += '2';
+        this.updateResult();
+    },
+
+    inputThree: function () {
+        kq.val += '3';
+        this.updateResult();
+    },
+
+    inputFour: function () {
+        kq.val += '4';
+        this.updateResult();
+    },
+
+    inputFive: function () {
+        kq.val += '5';
+        this.updateResult();
+    },
+
+    inputSix: function () {
+        kq.val += '6';
+        this.updateResult();
+    },
+
+    inputSeven: function () {
+        kq.val += '7';
+        this.updateResult();
+    },
+
+    inputEight: function () {
+        kq.val += '8';
+        this.updateResult();
+    },
+
+    inputNine: function () {
+        kq.val += '9';
+        this.updateResult();
+    },
+
+    inputComma: function () {
+        kq.val += '.';
+        this.updateResult();
+    },
+
+    inputBackspace: function () {
+        length = kq.val.length - 1;
+        kq.val = kq.val.substr(0, length);
+        this.updateResult();
     },
 
     updateResult: function () {
@@ -318,7 +429,7 @@ var GameState = {
     },
 
     checkState: function () {
-
+        d = 0;
         for (i = 0; i < GameState.CN; i++) {
             for (j = 0; j <= i; j++) {
                 if (result[i][j] != f_n[i][j] && result[i][j] != '') {
@@ -331,6 +442,21 @@ var GameState = {
                     graphics.beginFill(0xffffff);
                     graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
                     graphics.endFill();
+                }
+                if (result[i][j] == f_n[i][j] && !block[i][j].draw) {
+                    d++;
+                }
+            }
+        }
+        for (i = 0; i < GameState.CN; i++) {
+            for (j = 0; j <= i; j++) {
+                if (d >= 15 && !block[i][j].draw) {
+                    graphics.beginFill(0x00ff00);
+                    graphics.drawRect(320 + 96 * j - 48 * i, 200 + 53 * i, 89, 48);
+                    graphics.endFill();
+                    game.time.events.add(Phaser.Timer.SECOND * 2, function () {
+                        game.state.start('Home', true, false, "Chúc mừng bạn đã qua vòng!");
+                    });
                 }
             }
         }
@@ -348,7 +474,5 @@ var GameState = {
         });
         this.text.anchor.setTo(0.5, 0.5);
     },
-
-
 
 }
