@@ -55,6 +55,7 @@ var GameState = {
         this.Eight = game.input.keyboard.addKey(Phaser.Keyboard.EIGHT);
         this.Nine = game.input.keyboard.addKey(Phaser.Keyboard.NINE);
         this.Comma = game.input.keyboard.addKey(Phaser.Keyboard.COMMA);
+        this.Period = game.input.keyboard.addKey(Phaser.Keyboard.PERIOD);
         this.Enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
         this.Backspace = game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
 
@@ -312,7 +313,7 @@ var GameState = {
         if ((this.Nine.justDown) || (this.Num_9.justDown)) {
             this.inputNine();
         }
-        if ((this.Comma.justDown) || (this.Decimal.justDown)) {
+        if ((this.Comma.justDown) || (this.Decimal.justDown) || (this.Period.justDown)) {
             this.inputComma();
         }
         if (this.Backspace.justDown) {
