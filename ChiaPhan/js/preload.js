@@ -8,6 +8,7 @@ var Preload = {
     preload: function () {
         this.load.image('background', '../NumberConundrum/assets/background.jpg');
         this.load.image('frac', 'ChiaPhan/assets/frac.png');
+        this.load.image('frac1', 'ChiaPhan/assets/frac2.png');
         this.load.text('level', 'ChiaPhan/assets/level.json');
     },
 
