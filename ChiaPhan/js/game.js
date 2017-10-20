@@ -37,7 +37,6 @@ var GameState = {
             block.state = "wait";
             text = game.add.text(0, 4, value[Math.floor(count / 3)].ts + "/" + value[Math.floor(count / 3)].ms, style);
             text.anchor.setTo(0.5);
-            //text.scale.setTo(10);
             block.addChild(text);
             count++;
             block.inputEnabled = true;
@@ -67,11 +66,11 @@ var GameState = {
 
     onDragStart: function (child) {
         GameState.blocks.bringToTop(child);
-        GameState.platforms.forEach(function (plat) {
-            if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100) {
-                //child.state = 'install';
-            }
-        })
+//        GameState.platforms.forEach(function (plat) {
+//            if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100) {
+//                //child.state = 'install';
+//            }
+//        })
 
     },
 
@@ -80,7 +79,6 @@ var GameState = {
             if (child.state == 'wait') {
 
                 if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100 && plat.child.length < 3) {
-                    console.log(Phaser.Math.distance(child.x, child.y, plat.x, plat.y))
                     plat.child.push(child);
                     GameState.updatePlatforms();
                 } else {
