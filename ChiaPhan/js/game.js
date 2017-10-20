@@ -7,7 +7,7 @@ var GameState = {
         this.levelData.data.forEach(function (element) {
             platforms = this.platforms.create(element.x, element.y, 'frac1');
             platforms.val = 0;
-            platforms.child = new Array(3).fill(0);
+            platforms.child = new Array();
         }, this);
         this.platforms.setAll('scale.x', 0.27);
         this.platforms.setAll('scale.y', 0.27);
@@ -69,47 +69,60 @@ var GameState = {
         GameState.blocks.bringToTop(child);
         GameState.platforms.forEach(function (plat) {
             if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100) {
-                child.state = 'install';
+                //child.state = 'install';
             }
         })
 
     },
 
     onDragStop: function (child) {
-        d = 0;
         GameState.platforms.forEach(function (plat) {
-            if ((Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100) && (plat.val < 3) && (child.state == "wait")) {
-                d++;
-                game.add.tween(child).to({
-                    x: plat.x + GameState.levelData.dis[plat.val].x,
-                    y: plat.y + GameState.levelData.dis[plat.val].y
-                }, 500, "Linear", true);
-                plat.child[plat.val] = child;
-                plat.val++;
-            } else {
-                if (d == 0 && child.state == "wait") {
-                    game.add.tween(child).to({
-                        x: child.u,
-                        y: child.v
-                    }, 500, "Linear", true);
-                }
-                if (child.state == "install") {
-                    if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100) {
-                        game.add.tween(child).to({
-                            x: plat.x + GameState.levelData.dis[plat.val].x,
-                            y: plat.y + GameState.levelData.dis[plat.val].y
-                        }, 500, "Linear", true);
-                    } else {
+            if (child.state == 'wait') {
+
+                if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100 && plat.child.length < 3) {
+                    console.log(Phaser.Math.distance(child.x, child.y, plat.x, plat.y))
+                    plat.child.push(child);
+                    GameState.updatePlatforms();
+                } else {
+                    if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) > 100 || plat.child.length > 3) {
                         game.add.tween(child).to({
                             x: child.u,
                             y: child.v
                         }, 500, "Linear", true);
                     }
+                    GameState.updatePlatforms();
+                }
 
+            } else {
+                if (child.state == 'install') {
+                    if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) > 100){
+                        plat.child = plat.child.filter(function(ele){
+                            return ele!=child;
+                        })
+                        child.state='wait';
+                        game.add.tween(child).to({
+                            x: child.u,
+                            y: child.v
+                        }, 500, "Linear", true);
+                        GameState.updatePlatforms();
+                    }else{
+                        GameState.updatePlatforms();
+                    }
                 }
             }
         })
 
+    },
 
+    updatePlatforms: function () {
+        GameState.platforms.forEach(function (plat) {
+            for (i = 0; i < plat.child.length; i++) {
+                plat.child[i].state='install';
+                game.add.tween(plat.child[i]).to({
+                    x: plat.x + GameState.levelData.dis[i].x,
+                    y: plat.y + GameState.levelData.dis[i].y
+                }, 500, "Linear", true);
+            }
+        })
     }
 }
