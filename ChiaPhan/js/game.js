@@ -1,5 +1,6 @@
-var GameState = {
 
+var GameState = {
+    level : 1,
     create: function () {
         this.background = game.add.sprite(0, 0, 'background');
         this.levelData = JSON.parse(this.game.cache.getText('level'));
@@ -41,7 +42,8 @@ var GameState = {
             stroke: "#8df51e",
             strokeThickness: 2
         };
-        value = this.levelData.lv1;
+
+        value = this.levelData['lv' + GameState.level];
         this.levelData.block.sort(function (a, b) {
             return (Math.random() - 0.5);
         })
@@ -112,7 +114,7 @@ var GameState = {
         this.blocks.setAll('anchor.y', 0.5);
         this.platforms.enableBody = true;
 
-        //game.input.onDown.add(this.gofull, this);
+//        game.input.onDown.add(this.gofull, this);
     },
 
     update: function () {
@@ -180,11 +182,46 @@ var GameState = {
     },
 
     newGame: function () {
-        game.state.start("GameState");
+        game.state.start("Home");
     },
 
     checkState: function () {
+         var style2 = {
+            font: '35px Arial',
+            fill: '#fff',
+            align: "center",
+            stroke: "#ff0000",
+            strokeThickness: 2
+        };
+        if(this.checkBlock()){
+            if (this.checkPlatforms()){
+                GameState.level++;
+                game.state.start("GameState");
+            }
+            else{
+                this.text = game.add.text(320, 350, "Sai rồi!\n Hãy làm lại nào.", style2);
+                this.text.anchor.setTo(0.5);
+            }
+        }
+    },
 
+    checkBlock: function(){
+        var flag = true;
+        GameState.blocks.forEach(function(child){
+            if (child.state=='wait') flag = false;
+        },this)
+        return flag;
+    },
+
+    checkPlatforms: function(){
+        var flag = true;
+        GameState.platforms.forEach(function(plat){
+            gt = plat.child[0].val;
+            plat.child.forEach(function(ele){
+                if (ele.val!=gt) flag = false;
+            })
+        }, this)
+        return flag;
     },
 
     gofull: function() {

@@ -16,6 +16,6 @@ var Preload = {
 
     create: function () {
         //game.state.start('Home', true, false, "WELCOME");
-        game.state.start('GameState');
+        game.state.start('Home');
     }
 }
