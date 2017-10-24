@@ -4,6 +4,8 @@ var GameState = {
         this.background = game.add.sprite(0, 0, 'background');
         this.levelData = JSON.parse(this.game.cache.getText('level'));
 
+
+
         this.refresh = game.add.sprite(120, 20, 'new');
         this.refresh.scale.setTo(0.16);
         this.refresh.anchor.setTo(0.05);
@@ -33,7 +35,7 @@ var GameState = {
         this.blocks.enableBody = true;
         count = 0;
         style = {
-            font: '30px Arial',
+            font: '25px Arial',
             fill: '#ff0000',
             align: "center",
             stroke: "#8df51e",
@@ -50,7 +52,44 @@ var GameState = {
             block.v = ele.y;
             block.val = value[Math.floor(count / 3)].ts / value[Math.floor(count / 3)].ms;
             block.state = "wait";
-            text = game.add.text(0, 4, value[Math.floor(count / 3)].ts + "/" + value[Math.floor(count / 3)].ms, style);
+            switch (count % 3) {
+                case 0:
+                    {
+                        text = game.add.text(0, 4, value[Math.floor(count / 3)].ts + "/" + value[Math.floor(count / 3)].ms, style);
+                        break;
+                    }
+                case 1:
+                    {
+                        l = Math.floor(Math.random() * 4 + 2);
+                        text = game.add.text(0, 4, l * value[Math.floor(count / 3)].ts + "/" + l * value[Math.floor(count / 3)].ms, style);
+                        break;
+                    }
+                case 2:
+                    {
+                        text = game.add.graphics(0, 0);
+//                        this.graphics.clear();
+                        start = 0;
+//                        text = game.add.text(0, 4, l * value[Math.floor(count / 3)].ts + "/" + l * value[Math.floor(count / 3)].ms, style);
+                        text.lineStyle(2, 0x000000);
+                        text.drawCircle(0, 0, 60);
+                        start = 0;
+                        arg = 360.0/(value[Math.floor(count / 3)].ms);
+                        for (i=0; i<(value[Math.floor(count / 3)].ts);i++){
+                            text.beginFill(0x0000ff);
+                            start += arg;
+                            text.arc(0,0,30,  game.math.degToRad(360-start), game.math.degToRad(358-(start+arg)), true);
+                        }
+                        for (i=value[Math.floor(count / 3)].ts; i<(value[Math.floor(count / 3)].ms);i++){
+                            text.beginFill(0x00bff3, 0.4);
+                            start += arg;
+                            text.arc(0,0,30,  game.math.degToRad(360-start), game.math.degToRad(358-(start+arg)), true);
+//                            text.arc(0,0,30,  game.math.degToRad(360-45), game.math.degToRad(360-90), true, 40);
+                        }
+
+                        break;
+                    }
+            }
+
             text.anchor.setTo(0.5);
             block.addChild(text);
             count++;
@@ -67,12 +106,13 @@ var GameState = {
             }, 500, "Linear", true);
 
         }, this);
-        this.blocks.setAll('scale.x', 0.7);
-        this.blocks.setAll('scale.y', 0.7);
+        this.blocks.setAll('scale.x', 0.8);
+        this.blocks.setAll('scale.y', 0.8);
         this.blocks.setAll('anchor.x', 0.5);
         this.blocks.setAll('anchor.y', 0.5);
         this.platforms.enableBody = true;
 
+        //game.input.onDown.add(this.gofull, this);
     },
 
     update: function () {
@@ -81,11 +121,11 @@ var GameState = {
 
     onDragStart: function (child) {
         GameState.blocks.bringToTop(child);
-//        GameState.platforms.forEach(function (plat) {
-//            if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100) {
-//                //child.state = 'install';
-//            }
-//        })
+        //        GameState.platforms.forEach(function (plat) {
+        //            if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100) {
+        //                //child.state = 'install';
+        //            }
+        //        })
 
     },
 
@@ -108,17 +148,17 @@ var GameState = {
 
             } else {
                 if (child.state == 'install') {
-                    if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) > 100){
-                        plat.child = plat.child.filter(function(ele){
-                            return ele!=child;
+                    if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) > 100) {
+                        plat.child = plat.child.filter(function (ele) {
+                            return ele != child;
                         })
-                        child.state='wait';
+                        child.state = 'wait';
                         game.add.tween(child).to({
                             x: child.u,
                             y: child.v
                         }, 500, "Linear", true);
                         GameState.updatePlatforms();
-                    }else{
+                    } else {
                         GameState.updatePlatforms();
                     }
                 }
@@ -130,7 +170,7 @@ var GameState = {
     updatePlatforms: function () {
         GameState.platforms.forEach(function (plat) {
             for (i = 0; i < plat.child.length; i++) {
-                plat.child[i].state='install';
+                plat.child[i].state = 'install';
                 game.add.tween(plat.child[i]).to({
                     x: plat.x + GameState.levelData.dis[i].x,
                     y: plat.y + GameState.levelData.dis[i].y
@@ -139,11 +179,21 @@ var GameState = {
         })
     },
 
-    newGame: function(){
+    newGame: function () {
         game.state.start("GameState");
     },
 
-    checkState: function(){
+    checkState: function () {
+
+    },
+
+    gofull: function() {
+
+        if (game.scale.isFullScreen) {
+            game.scale.stopFullScreen();
+        } else {
+            game.scale.startFullScreen(false);
+        }
 
     }
 }
