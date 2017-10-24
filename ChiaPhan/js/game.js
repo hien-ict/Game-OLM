@@ -3,6 +3,21 @@ var GameState = {
     create: function () {
         this.background = game.add.sprite(0, 0, 'background');
         this.levelData = JSON.parse(this.game.cache.getText('level'));
+
+        this.refresh = game.add.sprite(120, 20, 'new');
+        this.refresh.scale.setTo(0.16);
+        this.refresh.anchor.setTo(0.05);
+        this.refresh.inputEnabled = true;
+        this.refresh.events.onInputDown.add(this.newGame, this);
+        this.refresh.input.useHandCursor = true;
+
+        this.check = game.add.sprite(400, 20, 'check');
+        this.check.scale.setTo(0.15);
+        this.check.anchor.setTo(0.05);
+        this.check.inputEnabled = true;
+        this.check.events.onInputDown.add(this.checkState, this);
+        this.check.input.useHandCursor = true;
+
         this.platforms = game.add.group();
         this.levelData.data.forEach(function (element) {
             platforms = this.platforms.create(element.x, element.y, 'frac1');
@@ -122,5 +137,13 @@ var GameState = {
                 }, 500, "Linear", true);
             }
         })
+    },
+
+    newGame: function(){
+        game.state.start("GameState");
+    },
+
+    checkState: function(){
+
     }
 }
