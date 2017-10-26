@@ -1,10 +1,17 @@
-
 var GameState = {
-    level : 1,
+    level: 1,
     create: function () {
+        style2 = {
+            font: '25px Arial',
+            fill: '#ee00ee',
+            align: "center",
+            stroke: "#eeee00",
+            strokeThickness: 2
+        };
         this.background = game.add.sprite(0, 0, 'background');
         this.levelData = JSON.parse(this.game.cache.getText('level'));
 
+        this.txt = game.add.text(30,120,"LEVEL: "+GameState.level,style2);
 
 
         this.refresh = game.add.sprite(120, 20, 'new');
@@ -37,7 +44,7 @@ var GameState = {
         count = 0;
         style = {
             font: '25px Arial',
-            fill: '#ff0000',
+            fill: '#ee0000',
             align: "center",
             stroke: "#8df51e",
             strokeThickness: 2
@@ -69,25 +76,21 @@ var GameState = {
                 case 2:
                     {
                         text = game.add.graphics(0, 0);
-//                        this.graphics.clear();
                         start = 0;
-//                        text = game.add.text(0, 4, l * value[Math.floor(count / 3)].ts + "/" + l * value[Math.floor(count / 3)].ms, style);
                         text.lineStyle(2, 0x000000);
                         text.drawCircle(0, 0, 60);
                         start = 0;
-                        arg = 360.0/(value[Math.floor(count / 3)].ms);
-                        for (i=0; i<(value[Math.floor(count / 3)].ts);i++){
+                        arg = 360.0 / (value[Math.floor(count / 3)].ms);
+                        for (i = 0; i < (value[Math.floor(count / 3)].ts); i++) {
                             text.beginFill(0x0000ff);
                             start += arg;
-                            text.arc(0,0,30,  game.math.degToRad(360-start), game.math.degToRad(358-(start+arg)), true);
+                            text.arc(0, 0, 30, game.math.degToRad(360 - start), game.math.degToRad(358 - (start + arg)), true);
                         }
-                        for (i=value[Math.floor(count / 3)].ts; i<(value[Math.floor(count / 3)].ms);i++){
+                        for (i = value[Math.floor(count / 3)].ts; i < (value[Math.floor(count / 3)].ms); i++) {
                             text.beginFill(0x00bff3, 0.4);
                             start += arg;
-                            text.arc(0,0,30,  game.math.degToRad(360-start), game.math.degToRad(358-(start+arg)), true);
-//                            text.arc(0,0,30,  game.math.degToRad(360-45), game.math.degToRad(360-90), true, 40);
+                            text.arc(0, 0, 30, game.math.degToRad(360 - start), game.math.degToRad(358 - (start + arg)), true);
                         }
-
                         break;
                     }
             }
@@ -114,7 +117,7 @@ var GameState = {
         this.blocks.setAll('anchor.y', 0.5);
         this.platforms.enableBody = true;
 
-//        game.input.onDown.add(this.gofull, this);
+        //        game.input.onDown.add(this.gofull, this);
     },
 
     update: function () {
@@ -123,12 +126,10 @@ var GameState = {
 
     onDragStart: function (child) {
         GameState.blocks.bringToTop(child);
-        //        GameState.platforms.forEach(function (plat) {
-        //            if (Phaser.Math.distance(child.x, child.y, plat.x, plat.y) < 100) {
-        //                //child.state = 'install';
-        //            }
-        //        })
-
+        if (GameState.text) {
+            GameState.text.setText('');
+            GameState.text.alpha = 0;
+        }
     },
 
     onDragStop: function (child) {
@@ -186,45 +187,53 @@ var GameState = {
     },
 
     checkState: function () {
-         var style2 = {
+        var style2 = {
             font: '35px Arial',
             fill: '#fff',
             align: "center",
             stroke: "#ff0000",
-            strokeThickness: 2
+            strokeThickness: 2,
+            backgroundColor: 'rgba(0,0,0,0.5)'
         };
-        if(this.checkBlock()){
-            if (this.checkPlatforms()){
-                GameState.level++;
-                game.state.start("GameState");
-            }
-            else{
+        if (this.checkBlock()) {
+            if (this.checkPlatforms()) {
+                GameState.level += 1;
+                if (GameState.level <= 10) {
+                    game.state.start("Home", true, false, "Chúc mừng bạn qua level " + (GameState.level - 1) + "\n Hãy cố gắng để vượt qua mọi thử thách nhé!");
+                } else {
+                    game.state.start("Home", true, false, "THẬT TUYỆT! \n BẠN ĐÃ VƯỢT QUA MỌI THỬ THÁCH\nBẠN CÓ MUỐN CHƠI LẠI KHÔNG?");
+                }
+
+            } else {
                 this.text = game.add.text(320, 350, "Sai rồi!\n Hãy làm lại nào.", style2);
                 this.text.anchor.setTo(0.5);
             }
+        } else {
+            this.text = game.add.text(320, 350, "Bạn chưa làm xong!\n Hãy làm tiếp nào.", style2);
+            this.text.anchor.setTo(0.5);
         }
     },
 
-    checkBlock: function(){
+    checkBlock: function () {
         var flag = true;
-        GameState.blocks.forEach(function(child){
-            if (child.state=='wait') flag = false;
-        },this)
+        GameState.blocks.forEach(function (child) {
+            if (child.state == 'wait') flag = false;
+        }, this)
         return flag;
     },
 
-    checkPlatforms: function(){
+    checkPlatforms: function () {
         var flag = true;
-        GameState.platforms.forEach(function(plat){
+        GameState.platforms.forEach(function (plat) {
             gt = plat.child[0].val;
-            plat.child.forEach(function(ele){
-                if (ele.val!=gt) flag = false;
+            plat.child.forEach(function (ele) {
+                if (ele.val != gt) flag = false;
             })
         }, this)
         return flag;
     },
 
-    gofull: function() {
+    gofull: function () {
 
         if (game.scale.isFullScreen) {
             game.scale.stopFullScreen();
