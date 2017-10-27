@@ -32,6 +32,10 @@ var Home = {
             this.text.anchor.setTo(0.5);
             this.img = game.add.sprite(160,230, 'check');
             this.img.scale.setTo(0.15);
+            this.text = game.add.text(320, 400, 'Ví dụ:                         là 1 nhóm', style);
+            this.text.anchor.setTo(0.5);
+            this.img = game.add.sprite(200,300, 'VD');
+            //this.img.scale.setTo(0.15);
         }
         this.text = game.add.text(320, 520, "NHẤN VÀO ĐÂY ĐỂ BẮT ĐẦU", style2);
         this.text.inputEnabled = true;
