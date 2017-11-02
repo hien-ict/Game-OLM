@@ -7,6 +7,7 @@ var Preload = {
 
     preload: function () {
         this.load.image('background', 'Duaxe/assets/background.png');
+        this.load.spritesheet('player', 'Duaxe/assets/bomber.png', 60, 80);
     },
 
     create: function () {
