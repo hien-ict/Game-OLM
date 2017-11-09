@@ -32,12 +32,23 @@ var GameState = {
         //        game.input.onDown.add(this.gofull, this);
         this.player = game.add.sprite(this.levelData.map[count].x, this.levelData.map[count].y - 25, 'player');
         this.player.anchor.setTo(0.5);
-        GameState.move(60);
+//        GameState.move(60);
+        i=0;
+        this.levelData.map.forEach(function(ele){
+            game.add.text(ele.x, ele.y, i);
+            i++;
+        })
+        this.full = game.add.sprite(1240, 1240, 'full');
+        this.full.anchor.setTo(0.5);
+        this.full.scale.setTo(0.25);
+        this.full.inputEnabled = true;
+        this.full.input.useHandCursor = true;
+        this.full.events.onInputDown.add(this.gofull, this);
+        this.full.events.onInputOver.add(this.over, this.full);
+        this.full.events.onInputOut.add(this.out, this.full);
     },
 
     update: function () {
-        //        this.quay.angle+=5;
-        //        console.log(this.quay.angle);
         if (state == 'play') co++;
 
     },
@@ -54,20 +65,18 @@ var GameState = {
             this.quay.alpha = 1;
             state = 'wait';
             game.add.tween(this.quay).to({
-                angle: 360 * 30 + co * 15 + 5
+                angle: 360 * 20 + co * 15 + 5
             }, 3000 + co * 20, Phaser.Easing.Quadratic.Out, true);
             val = Math.floor(((360 * 30 + co * 15) / 60) % 6);
             this.wait();
             GameState.game.time.events.add(3000 + co * 20, function () {
                 GameState.display(val);
                 GameState.move(val + 1);
-
             });
         }
     },
 
     move: function (value) {
-
         this.Loop = GameState.game.time.events.loop(1000, function () {
             count++;
             value--;
@@ -140,5 +149,13 @@ var GameState = {
         } else {
             game.scale.startFullScreen(false);
         }
+    },
+
+    out() {
+        this.scale.setTo(0.25);
+    },
+
+    over() {
+        this.scale.setTo(0.31);
     }
 }
