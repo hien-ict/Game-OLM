@@ -146,8 +146,12 @@ var GameState = {
     gofull: function () {
         if (game.scale.isFullScreen) {
             game.scale.stopFullScreen();
+            this.full.frame = 0;
+            this.full.scale.setTo(0.25);
         } else {
             game.scale.startFullScreen(false);
+            this.full.frame = 1;
+            this.full.scale.setTo(0.25);
         }
     },
 
