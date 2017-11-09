@@ -162,4 +162,5 @@ var GameState = {
     over() {
         this.scale.setTo(0.31);
     }
+
 }
