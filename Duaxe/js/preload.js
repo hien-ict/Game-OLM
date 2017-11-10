@@ -7,7 +7,9 @@ var Preload = {
 
     preload: function () {
         this.load.image('background', 'Duaxe/assets/background.png');
+        this.load.image('background2', 'Duaxe/assets/background.jpg');
         this.load.image('quay', 'Duaxe/assets/quay.png');
+        this.load.image('popup', 'Duaxe/assets/popup.jpg');
         this.load.image('button', 'Duaxe/assets/button.png');
         this.load.spritesheet('player', 'Duaxe/assets/bomber.png', 60, 80);
         this.load.spritesheet('full', 'Duaxe/assets/full.png', 256, 256, 2);
