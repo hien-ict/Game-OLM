@@ -82,28 +82,7 @@ var Home = {
         this.join.input.pixelPerfectClick = true;
         this.join.input.pixelPerfectOver = true;
 
-        this.popup = game.add.sprite(game.world.centerX, game.world.centerY, 'popup');
-        this.popup.alpha = 0.8;
-        this.popup.anchor.set(0.5);
-        this.popup.inputEnabled = true;
-        this.popup.input.enableDrag();
-
-        //  Position the close button to the top-right of the popup sprite (minus 8px for spacing)
-        var pw = (this.popup.width / 2) - 30;
-        var ph = (this.popup.height / 2) - 8;
-
-        //  And click the close button to close it down again
-        var closeButton = game.make.sprite(pw, -ph, 'close');
-        closeButton.inputEnabled = true;
-        closeButton.input.priorityID = 1;
-        closeButton.input.useHandCursor = true;
-        closeButton.events.onInputDown.add(this.closeWindow, this);
-
-        //  Add the "close button" to the popup window image
-        this.popup.addChild(closeButton);
-
-        //  Hide it awaiting a click
-        this.popup.scale.set(0);
+        this.createPopup();
     },
 
     update: function () {
@@ -116,6 +95,32 @@ var Home = {
 
     over() {
         this.alpha = 1;
+    },
+
+    createPopup: function () {
+        this.popup = game.add.sprite(game.world.centerX, game.world.centerY, 'popup');
+        //        this.popup.alpha = 2;
+        this.popup.anchor.set(0.5);
+        this.popup.inputEnabled = true;
+//        this.popup.input.enableDrag();
+
+        //  Position the close button to the top-right of the popup sprite (minus 8px for spacing)
+        var pw = (this.popup.width / 2) - 40;
+        var ph = (this.popup.height / 2) - 57;
+
+        //  And click the close button to close it down again
+        var closeButton = game.make.sprite(pw, -ph, 'close');
+        closeButton.inputEnabled = true;
+        closeButton.anchor.setTo(0.5);
+        closeButton.input.priorityID = 1;
+        closeButton.input.useHandCursor = true;
+        closeButton.events.onInputDown.add(this.closeWindow, this);
+
+        //  Add the "close button" to the popup window image
+        this.popup.addChild(closeButton);
+
+        //  Hide it awaiting a click
+        this.popup.scale.set(0);
     },
 
     closeWindow: function () {
@@ -141,7 +146,7 @@ var Home = {
             x: 1,
             y: 1
         }, 1000, Phaser.Easing.Elastic.Out, true);
-        this.popup.alpha=0.8;
+        this.popup.alpha = 0.9;
     }
 
 }
