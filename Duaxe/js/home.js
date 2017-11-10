@@ -105,8 +105,8 @@ var Home = {
 //        this.popup.input.enableDrag();
 
         //  Position the close button to the top-right of the popup sprite (minus 8px for spacing)
-        var pw = (this.popup.width / 2) - 40;
-        var ph = (this.popup.height / 2) - 57;
+        var pw = (this.popup.width / 2) - 42;
+        var ph = (this.popup.height / 2) - 58;
 
         //  And click the close button to close it down again
         var closeButton = game.make.sprite(pw, -ph, 'close');
