@@ -19,12 +19,13 @@ var Preload = {
 
     create: function () {
         //game.state.start('Home', true, false, "WELCOME");
-        connection = io.connect('http://doc.olm.vn:1235/game')
+        connection = io.connect('http://doc.olm.vn:1235/game', {autoConnect : false})
         connection.on('connect', () => {
             connection.on('event.ojoin', (data) => {console.log(data)});
             connection.on('event.data', (data) => {console.log(data)});
 //            connection.emit('room.join', {name : 'room1', msg : 'tab1 da join'});
         })
         game.state.start('Home');
+        connection.open();
     }
 }

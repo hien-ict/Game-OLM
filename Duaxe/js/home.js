@@ -23,8 +23,9 @@ var Home = {
             stroke: "#ff0000",
             strokeThickness: 2
         };
-        this.background = game.add.sprite(0, 0, 'background2');
-        this.background.scale.setTo(2);
+//        this.background = game.add.sprite(0, 0, 'background2');
+//        this.background.scale.setTo(2);
+        this.stage.backgroundColor = '#fff';
         //this.background = game.add.sprite(0, 50, 'instruction');
         this.newgame = game.add.sprite(640, 400, 'button');
         this.newgame.anchor.setTo(0.5);
@@ -45,7 +46,7 @@ var Home = {
         this.law.scale.setTo(0.5);
         this.law.inputEnabled = true;
         this.law.events.onInputDown.add(function () {
-            this.state.start('GameState');
+            this.openWindow();
         }, this);
         this.law.alpha = 0.7;
         this.law.events.onInputOver.add(this.over, this.law);
@@ -73,7 +74,7 @@ var Home = {
         this.join.scale.setTo(0.5);
         this.join.inputEnabled = true;
         this.join.events.onInputDown.add(function () {
-            this.state.start('GameState');
+            this.openWindow();
         }, this);
         this.join.alpha = 0.7;
         this.join.events.onInputOver.add(this.over, this.join);
@@ -147,6 +148,11 @@ var Home = {
             y: 1
         }, 1000, Phaser.Easing.Elastic.Out, true);
         this.popup.alpha = 0.9;
-    }
+    },
+
+    render: function () {
+        game.debug.inputInfo(32, 32, style);
+    },
+
 
 }
