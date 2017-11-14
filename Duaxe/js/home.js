@@ -122,6 +122,15 @@ var Home = {
 
         //  Hide it awaiting a click
         this.popup.scale.set(0);
+        var acceptButton = game.make.sprite(0, ph, 'block2');
+        acceptButton.inputEnabled = true;
+        acceptButton.anchor.setTo(0.5);
+        acceptButton.input.priorityID = 1;
+        acceptButton.input.useHandCursor = true;
+//        acceptButton.events.onInputDown.add(this.closeWindow, this);
+
+        //  Add the "close button" to the popup window image
+        this.popup.addChild(acceptButton);
     },
 
     closeWindow: function () {

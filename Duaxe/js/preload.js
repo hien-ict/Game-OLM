@@ -12,6 +12,8 @@ var Preload = {
         this.load.image('popup', 'Duaxe/assets/popup.png');
         this.load.image('close', 'Duaxe/assets/close.png');
         this.load.image('button', 'Duaxe/assets/button.png');
+        this.load.image('block', 'Duaxe/assets/block.png');
+        this.load.image('block2', 'Duaxe/assets/block2.png');
         this.load.spritesheet('player', 'Duaxe/assets/bomber.png', 60, 80);
         this.load.spritesheet('full', 'Duaxe/assets/full.png', 256, 256, 2);
         this.load.text('map', 'Duaxe/assets/map.json');
