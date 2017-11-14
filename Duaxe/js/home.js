@@ -41,19 +41,19 @@ var Home = {
         this.newgame.input.pixelPerfectClick = true;
         this.newgame.input.pixelPerfectOver = true;
 
-        this.law = game.add.sprite(640, 600, 'button');
-        this.law.anchor.setTo(0.5);
-        this.law.scale.setTo(0.5);
-        this.law.inputEnabled = true;
-        this.law.events.onInputDown.add(function () {
+        this.rand = game.add.sprite(640, 600, 'button');
+        this.rand.anchor.setTo(0.5);
+        this.rand.scale.setTo(0.5);
+        this.rand.inputEnabled = true;
+        this.rand.events.onInputDown.add(function () {
             this.openWindow();
         }, this);
-        this.law.alpha = 0.7;
-        this.law.events.onInputOver.add(this.over, this.law);
-        this.law.events.onInputOut.add(this.out, this.law);
-        this.law.input.useHandCursor = true;
-        this.law.input.pixelPerfectClick = true;
-        this.law.input.pixelPerfectOver = true;
+        this.rand.alpha = 0.7;
+        this.rand.events.onInputOver.add(this.over, this.rand);
+        this.rand.events.onInputOut.add(this.out, this.rand);
+        this.rand.input.useHandCursor = true;
+        this.rand.input.pixelPerfectClick = true;
+        this.rand.input.pixelPerfectOver = true;
 
         this.create = game.add.sprite(640, 800, 'button');
         this.create.anchor.setTo(0.5);
