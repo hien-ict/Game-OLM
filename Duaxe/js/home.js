@@ -23,8 +23,8 @@ var Home = {
             stroke: "#ff0000",
             strokeThickness: 2
         };
-//        this.background = game.add.sprite(0, 0, 'background2');
-//        this.background.scale.setTo(2);
+//                this.background = game.add.sprite(0, 0, 'background2');
+//                this.background.scale.setTo(2);
         this.stage.backgroundColor = '#fff';
         //this.background = game.add.sprite(0, 50, 'instruction');
         this.newgame = game.add.sprite(640, 400, 'button');
@@ -61,6 +61,13 @@ var Home = {
         this.create.inputEnabled = true;
         this.create.events.onInputDown.add(function () {
             this.openWindow();
+            var acceptButton = game.make.sprite(0, ph - 20, 'block2');
+            acceptButton.inputEnabled = true;
+            acceptButton.anchor.setTo(0.5);
+            acceptButton.input.priorityID = 1;
+            acceptButton.input.useHandCursor = true;
+            //        acceptButton.events.onInputDown.add(this.closeWindow, this);
+            this.popup.addChild(acceptButton);
         }, this);
         this.create.alpha = 0.7;
         this.create.events.onInputOver.add(this.over, this.create);
@@ -103,7 +110,7 @@ var Home = {
         //        this.popup.alpha = 2;
         this.popup.anchor.set(0.5);
         this.popup.inputEnabled = true;
-//        this.popup.input.enableDrag();
+        //        this.popup.input.enableDrag();
 
         //  Position the close button to the top-right of the popup sprite (minus 8px for spacing)
         var pw = (this.popup.width / 2) - 42;
@@ -122,15 +129,8 @@ var Home = {
 
         //  Hide it awaiting a click
         this.popup.scale.set(0);
-        var acceptButton = game.make.sprite(0, ph, 'block2');
-        acceptButton.inputEnabled = true;
-        acceptButton.anchor.setTo(0.5);
-        acceptButton.input.priorityID = 1;
-        acceptButton.input.useHandCursor = true;
-//        acceptButton.events.onInputDown.add(this.closeWindow, this);
 
-        //  Add the "close button" to the popup window image
-        this.popup.addChild(acceptButton);
+
     },
 
     closeWindow: function () {
