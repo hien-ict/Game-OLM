@@ -11,7 +11,7 @@ spe = 30;
 var GameState = {
 
     create: function () {
-        count = 59;
+        count = 28;
         co = 0;
         this.background = game.add.sprite(0, 0, "background");
         this.text = game.add.text(759, 825, "QUAY", style);
@@ -50,7 +50,7 @@ var GameState = {
 
     update: function () {
         if (state == 'play') co++;
-
+        this.checkState();
     },
 
     show: function () {
@@ -89,8 +89,24 @@ var GameState = {
             console.log('18: Nhay coc');
         }
         if (count == 28 && (value == 1 || value == 2)) {
-            count = 58;
             console.log('28: Duong tat');
+            go = 'notok';
+            game.add.tween(GameState.player).to({
+                x: GameState.levelData.map[59].x,
+                y: GameState.levelData.map[59].y - 25
+            }, 1000, Phaser.Easing.Quadratic.Out, true);
+            if (value == 2) {
+                game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+                    game.add.tween(GameState.player).to({
+                        x: GameState.levelData.map[60].x,
+                        y: GameState.levelData.map[60].y - 25
+                    }, 1000, Phaser.Easing.Quadratic.Out, true);
+                }, this);
+                count=60;
+            } else {
+                count = 59;
+            }
+            state = "new";
         }
         if (count == 60) {
             count = 38;
@@ -100,9 +116,9 @@ var GameState = {
                 x: GameState.levelData.map[60].x,
                 y: GameState.levelData.map[60].y - 25
             }, 1000, Phaser.Easing.Quadratic.Out, true);
-             game.time.events.add(Phaser.Timer.SECOND * 1, function(){
-                 count=38;
-             }, this);
+            game.time.events.add(Phaser.Timer.SECOND * 1, function () {
+                count = 38;
+            }, this);
         }
         if (count == 39 && (value == 4 || value == 5 || value == 6)) {
             go = 'notok';
@@ -119,6 +135,11 @@ var GameState = {
                     state = "new";
                 }
             }, this)
+        }
+        if (count == 44 && (value == 4 || value == 5 || value == 6)) {
+            value = 0;
+            count--;
+            console.log('44: Dung chan chua dc di');
         }
         if (go == "ok") {
             this.Loop = GameState.game.time.events.loop(1000, function () {
@@ -184,6 +205,13 @@ var GameState = {
         GameState.game.time.events.add(2500, function () {
             GameState.text.setText("...");
         });
+    },
+
+    checkState: function () {
+        if (count == 58) {
+            console.log("win");
+            GameState.game.time.events.remove(this.Loop);
+        }
     },
 
     render: function () {
