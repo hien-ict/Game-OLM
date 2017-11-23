@@ -11,7 +11,7 @@ spe = 30;
 var GameState = {
 
     create: function () {
-        count = 28;
+        count = 59;
         co = 0;
         this.background = game.add.sprite(0, 0, "background");
         this.text = game.add.text(759, 825, "QUAY", style);
@@ -32,9 +32,9 @@ var GameState = {
         //        game.input.onDown.add(this.gofull, this);
         this.player = game.add.sprite(this.levelData.map[count].x, this.levelData.map[count].y - 25, 'player');
         this.player.anchor.setTo(0.5);
-//        GameState.move(60);
-        i=0;
-        this.levelData.map.forEach(function(ele){
+        //        GameState.move(60);
+        i = 0;
+        this.levelData.map.forEach(function (ele) {
             game.add.text(ele.x, ele.y, i);
             i++;
         })
@@ -77,42 +77,66 @@ var GameState = {
     },
 
     move: function (value) {
-        if (count==8&&(value==2||value==4||value==6)){
-            value=0;
+        go = 'ok';
+        if (count == 8 && (value == 2 || value == 4 || value == 6)) {
+            value = 0;
             count--;
             console.log('8: Dung chan chua dc di');
         }
-        if (count==18&&(value==3||value==6)){
-            value=0;
-            count=25;
+        if (count == 18 && (value == 3 || value == 6)) {
+            value = 0;
+            count = 25;
             console.log('18: Nhay coc');
         }
-        if (count==28&&(value==1||value==2)){
-            count=58;
+        if (count == 28 && (value == 1 || value == 2)) {
+            count = 58;
             console.log('28: Duong tat');
         }
-        if (count==60){
-            count=38;
+        if (count == 60) {
+            count = 38;
         }
-        if (count==39&&(value==3||value==4||value==5)){
-            count-=value;
-            console.log('28: Duong tat');
-        }
-        this.Loop = GameState.game.time.events.loop(1000, function () {
-            count++;
-            value--;
+        if (count == 59 && value > 1) {
             game.add.tween(GameState.player).to({
-                x: GameState.levelData.map[count].x,
-                y: GameState.levelData.map[count].y - 25
+                x: GameState.levelData.map[60].x,
+                y: GameState.levelData.map[60].y - 25
             }, 1000, Phaser.Easing.Quadratic.Out, true);
-            if (count==8||count==18||count==28||count==39||count==44){
-                value=0;
-            }
-            if (value <= 0) {
-                GameState.game.time.events.remove(this.Loop);
-                state = "new";
-            }
-        }, this)
+             game.time.events.add(Phaser.Timer.SECOND * 1, function(){
+                 count=38;
+             }, this);
+        }
+        if (count == 39 && (value == 4 || value == 5 || value == 6)) {
+            go = 'notok';
+            console.log('39: Quay lại');
+            this.Loop = GameState.game.time.events.loop(1000, function () {
+                count--;
+                value--;
+                game.add.tween(GameState.player).to({
+                    x: GameState.levelData.map[count].x,
+                    y: GameState.levelData.map[count].y - 25
+                }, 1000, Phaser.Easing.Quadratic.Out, true);
+                if (value <= 0) {
+                    GameState.game.time.events.remove(this.Loop);
+                    state = "new";
+                }
+            }, this)
+        }
+        if (go == "ok") {
+            this.Loop = GameState.game.time.events.loop(1000, function () {
+                count++;
+                value--;
+                game.add.tween(GameState.player).to({
+                    x: GameState.levelData.map[count].x,
+                    y: GameState.levelData.map[count].y - 25
+                }, 1000, Phaser.Easing.Quadratic.Out, true);
+                if (count == 8 || count == 18 || count == 28 || count == 39 || count == 44) {
+                    value = 0;
+                }
+                if (value <= 0) {
+                    GameState.game.time.events.remove(this.Loop);
+                    state = "new";
+                }
+            }, this)
+        }
     },
 
     display: function (val) {
