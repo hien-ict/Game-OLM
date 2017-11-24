@@ -11,7 +11,7 @@ spe = 30;
 var GameState = {
 
     create: function () {
-        count = 28;
+        count = 57;
         co = 0;
         this.background = game.add.sprite(0, 0, "background");
         this.text = game.add.text(759, 825, "QUAY", style);
@@ -50,7 +50,7 @@ var GameState = {
 
     update: function () {
         if (state == 'play') co++;
-        this.checkState();
+        if (state!='win') this.checkState();
     },
 
     show: function () {
@@ -102,7 +102,7 @@ var GameState = {
                         y: GameState.levelData.map[60].y - 25
                     }, 1000, Phaser.Easing.Quadratic.Out, true);
                 }, this);
-                count=60;
+                count = 60;
             } else {
                 count = 59;
             }
@@ -210,7 +210,11 @@ var GameState = {
     checkState: function () {
         if (count == 58) {
             console.log("win");
+            state="win";
+            this.printMessage("Bạn đã thắng!!")
             GameState.game.time.events.remove(this.Loop);
+            this.stage.backgroundColor = 'rgba(0,0,0,0.5)';
+
         }
     },
 
@@ -236,6 +240,19 @@ var GameState = {
 
     over() {
         this.scale.setTo(0.31);
-    }
+    },
 
+    printMessage: function (text) {
+        var style = {
+            font: '60px Arial',
+            fill: '#ff0000',
+            align: "center",
+            stroke: "#8df51e",
+            strokeThickness: 4,
+            backgroundColor: 'rgba(0,0,0,0.5)'
+        };
+        this.text = game.add.text(640,640,text, style)
+        this.text.anchor.setTo(0.5);
+        this.text.scale.setTo(1);
+    }
 }

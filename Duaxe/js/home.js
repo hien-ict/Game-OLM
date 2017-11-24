@@ -61,7 +61,7 @@ var Home = {
         this.create.inputEnabled = true;
         this.create.events.onInputDown.add(function () {
             this.openWindow();
-            var acceptButton = game.make.sprite(0, ph - 20, 'block2');
+            var acceptButton = game.make.sprite(0,240, 'block2');
             acceptButton.inputEnabled = true;
             acceptButton.anchor.setTo(0.5);
             acceptButton.input.priorityID = 1;
