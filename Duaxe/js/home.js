@@ -25,6 +25,7 @@ var Home = {
         };
 //                this.background = game.add.sprite(0, 0, 'background2');
 //                this.background.scale.setTo(2);
+        this.sndClick = game.add.audio('click');
         this.stage.backgroundColor = '#fff';
         //this.background = game.add.sprite(0, 50, 'instruction');
         this.newgame = game.add.sprite(640, 400, 'button');
@@ -33,6 +34,7 @@ var Home = {
         this.newgame.inputEnabled = true;
         this.newgame.events.onInputDown.add(function () {
             this.state.start('GameState');
+            this.sndClick.play();
         }, this);
         this.newgame.alpha = 0.7;
         this.newgame.events.onInputOver.add(this.over, this.newgame);

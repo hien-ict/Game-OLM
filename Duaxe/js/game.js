@@ -11,12 +11,14 @@ spe = 30;
 var GameState = {
 
     create: function () {
-        count = 57;
+        count = 0;
         co = 0;
         this.background = game.add.sprite(0, 0, "background");
         this.text = game.add.text(759, 825, "QUAY", style);
         this.text.anchor.setTo(0.5);
         //        this.background.scale.setTo(0.5);
+        this.createSnd();
+        //        this.sndQuay.play();
         this.quay = game.add.sprite(492, 838, 'quay');
         this.quay.anchor.setTo(0.5);
         this.quay.scale.setTo(0.5);
@@ -50,7 +52,7 @@ var GameState = {
 
     update: function () {
         if (state == 'play') co++;
-        if (state!='win') this.checkState();
+        if (state != 'win') this.checkState();
     },
 
     show: function () {
@@ -64,13 +66,15 @@ var GameState = {
         if (state == "play") {
             this.quay.alpha = 1;
             state = 'wait';
+            GameState.sndQuay.play('part2');
             game.add.tween(this.quay).to({
                 angle: 360 * 20 + co * 15 + 5
-            }, 3000 + co * 20, Phaser.Easing.Quadratic.Out, true);
+            }, 6000 + co * 20, Phaser.Easing.Quadratic.Out, true);
             val = Math.floor(((360 * 30 + co * 15) / 60) % 6);
             this.wait();
-            GameState.game.time.events.add(3000 + co * 20, function () {
+            GameState.game.time.events.add(6000 + co * 20, function () {
                 GameState.display(val);
+                GameState.sndQuay.stop();
                 GameState.move(val + 1);
             });
         }
@@ -152,6 +156,9 @@ var GameState = {
                 if (count == 8 || count == 18 || count == 28 || count == 39 || count == 44) {
                     value = 0;
                 }
+                if (value == 0) {
+                    GameState.sndStop.play();
+                }
                 if (value <= 0) {
                     GameState.game.time.events.remove(this.Loop);
                     state = "new";
@@ -210,11 +217,11 @@ var GameState = {
     checkState: function () {
         if (count == 58) {
             console.log("win");
-            state="win";
+            state = "win";
             this.printMessage("Bạn đã thắng!!")
             GameState.game.time.events.remove(this.Loop);
             this.stage.backgroundColor = 'rgba(0,0,0,0.5)';
-
+            this.sndWin.play();
         }
     },
 
@@ -251,8 +258,29 @@ var GameState = {
             strokeThickness: 4,
             backgroundColor: 'rgba(0,0,0,0.5)'
         };
-        this.text = game.add.text(640,640,text, style)
+        this.text = game.add.text(640, 640, text, style)
         this.text.anchor.setTo(0.5);
         this.text.scale.setTo(1);
+    },
+
+    createSnd: function () {
+        var audioJSON = {
+            spritemap: {
+                'part1': {
+                    start: 1,
+                    end: 20,
+                    loop: false
+                },
+                'part2': {
+                    start: 21,
+                    end: 60,
+                    loop: false
+                }
+            }
+        };
+        this.sndClick = game.add.audio('click');
+        this.sndStop = game.add.audio('stop');
+        this.sndWin = game.add.audio('ting');
+        this.sndQuay = game.add.audioSprite('sndquay');
     }
 }
