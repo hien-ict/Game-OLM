@@ -282,5 +282,13 @@ var GameState = {
         this.sndStop = game.add.audio('stop');
         this.sndWin = game.add.audio('ting');
         this.sndQuay = game.add.audioSprite('sndquay');
+    },
+
+    sendData: function(){
+
+    },
+
+    receiveData: function(){
+
     }
 }
