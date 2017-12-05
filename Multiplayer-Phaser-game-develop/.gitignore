@@ -1,0 +1,10 @@
+node_modules/
+.vscode/
+.idea/
+bundle.js
+*.log
+/src/**/*.js
+/**/*.map
+*.iml
+/src/*.js
+.DS_Store
