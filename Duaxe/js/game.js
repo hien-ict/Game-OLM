@@ -77,7 +77,7 @@ var GameState = {
             GameState.game.time.events.add(6000 + co * 20, function () {
                 GameState.display(val);
                 GameState.sndQuay.stop();
-                GameState.move(player[numPlayer-1],val + 1);
+//                GameState.move(player[numPlayer-1],val + 1);
                 GameState.move(player[0],2);
                 GameState.move(player[1],3);
             });
