@@ -1,3 +1,4 @@
+
 var Preload = {
     init: function () {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -28,7 +29,7 @@ var Preload = {
         this.load.image('button', 'Duaxe/assets/button.png');
         this.load.image('block', 'Duaxe/assets/block.png');
         this.load.image('block2', 'Duaxe/assets/block2.png');
-        this.load.spritesheet('player', 'Duaxe/assets/bomber.png', 60, 80);
+        this.load.spritesheet('player', 'Duaxe/assets/12congiap.png', 160, 175);
         this.load.spritesheet('full', 'Duaxe/assets/full.png', 256, 256, 2);
         this.load.text('map', 'Duaxe/assets/map.json');
 
@@ -39,18 +40,22 @@ var Preload = {
     },
 
     create: function () {
+//        Preload.levelData = JSON.parse(this.game.cache.getText('map'));
         //game.state.start('Home', true, false, "WELCOME");
         connection = io.connect('http://doc.olm.vn:1235/game', {
             autoConnect: false
         })
         connection.on('connect', () => {
             connection.on('event.ojoin', (data) => {
-                console.log(data)
+                //GameState.createPlayer(data.player);
+                console.log(data.player);
             });
             connection.on('event.data', (data) => {
                 console.log(data)
             });
             //            connection.emit('room.join', {name : 'room1', msg : 'tab1 da join'});
+            //            connection.emit('room.join', { room : 'room1', msg : 'tab1 da join'});
+            //            connection.emit('event.data', { room: 'room1' ,name : 'user1', msg : '1'});
         })
         game.state.start('Home');
         connection.open();

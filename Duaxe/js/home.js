@@ -1,4 +1,5 @@
 var tween = null;
+var numPlayer=0;
 var Home = {
     init: function (message) {
         this.message = message;
@@ -33,6 +34,8 @@ var Home = {
         this.newgame.scale.setTo(0.5);
         this.newgame.inputEnabled = true;
         this.newgame.events.onInputDown.add(function () {
+
+
             this.state.start('GameState');
             this.sndClick.play();
         }, this);
@@ -48,7 +51,10 @@ var Home = {
         this.rand.scale.setTo(0.5);
         this.rand.inputEnabled = true;
         this.rand.events.onInputDown.add(function () {
-            this.openWindow();
+            if (numPlayer<4){
+                connection.emit('room.join', { room : 'room1', player : 'Player'+numPlayer});
+                numPlayer++;
+            }
         }, this);
         this.rand.alpha = 0.7;
         this.rand.events.onInputOver.add(this.over, this.rand);
