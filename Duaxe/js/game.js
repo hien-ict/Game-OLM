@@ -291,7 +291,6 @@ var GameState = {
 
     createPlayer: function () {
         for (i=0;i<numPlayer;i++){
-//            playerX="player"+i;
             player[i] = game.add.sprite(this.levelData.map[0].x, this.levelData.map[0].y - 25, 'player');
             player[i].anchor.setTo(0.5, 0.6);
             player[i].scale.setTo(0.6);
