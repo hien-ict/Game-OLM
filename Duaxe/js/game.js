@@ -7,6 +7,7 @@ var style = {
     //backgroundColor: 'rgba(0,0,0,0.5)'
 };
 state = 'new';
+statePlayer = "wait";
 spe = 30;
 var player = new Array(4);
 var GameState = {
@@ -14,6 +15,7 @@ var GameState = {
     create: function () {
         turn = 0;
         cou = 0;
+        counter = 15;
         this.background = game.add.sprite(0, 0, "background");
         this.background.alpha = 0.8;
         this.text = game.add.text(759, 825, "QUAY", style);
@@ -50,11 +52,19 @@ var GameState = {
         this.full.events.onInputDown.add(this.gofull, this);
         this.full.events.onInputOver.add(this.over, this.full);
         this.full.events.onInputOut.add(this.out, this.full);
+
+        this.printTime();
     },
 
     update: function () {
         if (state == 'play') cou++;
         if (state != 'win') this.checkState();
+        if (state == "new" && ((turn % numP) === (numPlayer - 1))) {
+            this.full.inputEnabled = true;
+            this.activePlayer();
+        } else {
+            this.full.inputEnabled = false;
+        }
     },
 
     show: function () {
@@ -304,7 +314,10 @@ var GameState = {
     },
 
     sendData: function () {
-        if ((turn % numP) === (numPlayer - 1)) {
+        statePlayer = "wait";
+        couter = 15;
+        GameState.updateTime("wait");
+        if (state == "play" && (turn % numP) === (numPlayer - 1)) {
             turn++;
             connection.emit('event.data', {
                 room: 'room1',
@@ -317,5 +330,38 @@ var GameState = {
 
     receiveData: function () {
 
-    }
+    },
+
+    activePlayer: function () {
+        if (statePlayer == "wait") {
+            statePlayer = "ok";
+
+            this.game.time.events.loop(Phaser.Timer.SECOND, GameState.updateTime, this);
+        }
+
+        //        this.updateTime();
+    },
+
+    printTime() {
+        this.time = game.add.text(200, 200, 'Time: 15', {
+            font: "50px Arial",
+            fill: "#000",
+            align: "center"
+        });
+        this.time.anchor.setTo(0.5, 0.5);
+        //        this.text.fixedToCamera = true;
+    },
+
+    updateTime(msg) {
+        if (statePlayer != "wait") {
+            counter--;
+        }
+        if (msg) {
+            this.time.setText('Time: ' + msg);
+        } else {
+            this.time.setText('Time: ' + counter);
+        }
+
+
+    },
 }
