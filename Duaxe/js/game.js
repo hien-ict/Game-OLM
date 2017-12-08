@@ -315,7 +315,8 @@ var GameState = {
 
     sendData: function () {
         statePlayer = "wait";
-        couter = 15;
+        GameState.game.time.events.remove(GameState.Loop2);
+        counter = 16;
         GameState.updateTime("wait");
         if (state == "play" && (turn % numP) === (numPlayer - 1)) {
             turn++;
@@ -336,7 +337,7 @@ var GameState = {
         if (statePlayer == "wait") {
             statePlayer = "ok";
 
-            this.game.time.events.loop(Phaser.Timer.SECOND, GameState.updateTime, this);
+            GameState.Loop2 = this.game.time.events.loop(Phaser.Timer.SECOND, GameState.updateTime, this);
         }
 
         //        this.updateTime();
