@@ -58,7 +58,7 @@ var GameState = {
     },
 
     show: function () {
-        if (state == "new" && ((turn % numP) == (numPlayer - 1))) {
+        if (state == "new" && ((turn % numP) === (numPlayer - 1))) {
             this.quay.alpha = 0.8;
             state = 'play'
         }
@@ -304,13 +304,15 @@ var GameState = {
     },
 
     sendData: function () {
-        turn++;
-        connection.emit('event.data', {
-            room: 'room1',
-            username: numPlayer - 1,
-            val: cou,
-            turn: turn
-        });
+        if ((turn % numP) === (numPlayer - 1)) {
+            turn++;
+            connection.emit('event.data', {
+                room: 'room1',
+                username: numPlayer - 1,
+                val: cou,
+                turn: turn
+            });
+        }
     },
 
     receiveData: function () {

@@ -64,6 +64,7 @@ var Preload = {
                 }
 
                 if(data.val){
+                    turn=data.turn;
                     state="play";
                     GameState.play(player[data.username], data.val);
 
