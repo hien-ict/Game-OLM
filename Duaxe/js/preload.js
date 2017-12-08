@@ -33,9 +33,9 @@ var Preload = {
         this.load.spritesheet('full', 'Duaxe/assets/full.png', 256, 256, 2);
         this.load.text('map', 'Duaxe/assets/map.json');
 
-        this.load.audio('click', '../../Multiplication/assets/sndClick.mp3');
-        this.load.audio('stop', '../../Multiplication/assets/sndComet.mp3');
-        this.load.audio('ting', '../../battership/assets/ting.mp3');
+        this.load.audio('click', 'Multiplication/assets/sndClick.mp3');
+        this.load.audio('stop', 'Multiplication/assets/sndComet.mp3');
+        this.load.audio('ting', 'battership/assets/ting.mp3');
         this.load.audiosprite('sndquay', 'Duaxe/assets/quay.mp3', null, audioJSON);
         game.stage.disableVisibilityChange = true;
     },
