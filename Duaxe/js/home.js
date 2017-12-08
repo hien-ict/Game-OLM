@@ -35,8 +35,8 @@ var Home = {
         this.newgame.inputEnabled = true;
         this.newgame.events.onInputDown.add(function () {
 
-
-            this.state.start('GameState');
+            connection.emit('event.data', { room: 'room1' , msg : 'Start', num: numPlayer});
+//            this.state.start('GameState');
             this.sndClick.play();
         }, this);
         this.newgame.alpha = 0.7;
@@ -46,14 +46,15 @@ var Home = {
         this.newgame.input.pixelPerfectClick = true;
         this.newgame.input.pixelPerfectOver = true;
 
+
         this.rand = game.add.sprite(640, 600, 'button');
         this.rand.anchor.setTo(0.5);
         this.rand.scale.setTo(0.5);
         this.rand.inputEnabled = true;
         this.rand.events.onInputDown.add(function () {
             if (numPlayer<4){
-                connection.emit('room.join', { room : 'room1', player : 'Player'+numPlayer});
-                numPlayer++;
+//                connection.emit('event.data', { room : 'room1', player : 'Player'+numPlayer, num: numPlayer});
+//
             }
         }, this);
         this.rand.alpha = 0.7;
@@ -63,11 +64,13 @@ var Home = {
         this.rand.input.pixelPerfectClick = true;
         this.rand.input.pixelPerfectOver = true;
 
+
         this.create = game.add.sprite(640, 800, 'button');
         this.create.anchor.setTo(0.5);
         this.create.scale.setTo(0.5);
         this.create.inputEnabled = true;
         this.create.events.onInputDown.add(function () {
+
             this.openWindow();
             var acceptButton = game.make.sprite(0,240, 'block2');
             acceptButton.inputEnabled = true;

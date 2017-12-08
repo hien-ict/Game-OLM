@@ -12,8 +12,8 @@ var player = new Array(4);
 var GameState = {
 
     create: function () {
-
-        co = 0;
+        turn = 0;
+        cou = 0;
         this.background = game.add.sprite(0, 0, "background");
         this.background.alpha = 0.8;
         this.text = game.add.text(759, 825, "QUAY", style);
@@ -26,7 +26,7 @@ var GameState = {
         this.quay.scale.setTo(0.5);
         this.quay.inputEnabled = true;
         this.quay.events.onInputDown.add(this.show, this);
-        this.quay.events.onInputUp.add(this.play, this);
+        this.quay.events.onInputUp.add(this.sendData, this);
         this.quay.input.useHandCursor = true;
         this.quay.input.pixelPerfectClick = true;
         this.quay.input.pixelPerfectOver = true;
@@ -53,23 +53,24 @@ var GameState = {
     },
 
     update: function () {
-        if (state == 'play') co++;
+        if (state == 'play') cou++;
         if (state != 'win') this.checkState();
     },
 
     show: function () {
-        if (state == "new") {
+        if (state == "new" && ((turn % numP) == (numPlayer - 1))) {
             this.quay.alpha = 0.8;
             state = 'play'
         }
     },
 
-    play: function () {
+    play: function (player, co) {
         if (state == "play") {
             this.quay.alpha = 1;
             state = 'wait';
+
             GameState.sndQuay.play('part2');
-            game.add.tween(this.quay).to({
+            game.add.tween(GameState.quay).to({
                 angle: 360 * 20 + co * 15 + 5
             }, 6000 + co * 20, Phaser.Easing.Quadratic.Out, true);
             val = Math.floor(((360 * 30 + co * 15) / 60) % 6);
@@ -77,9 +78,10 @@ var GameState = {
             GameState.game.time.events.add(6000 + co * 20, function () {
                 GameState.display(val);
                 GameState.sndQuay.stop();
-//                GameState.move(player[numPlayer-1],val + 1);
-                GameState.move(player[0],2);
-                GameState.move(player[1],3);
+                GameState.move(player, val + 1);
+                //                GameState.move(GameState.player,val+1);
+                //                GameState.move(player[1],3);
+                //                GameState.sendData(val+1);
             });
         }
     },
@@ -131,7 +133,7 @@ var GameState = {
         if (player.count == 39 && (value == 4 || value == 5 || value == 6)) {
             go = 'notok';
             console.log('39: Quay lại');
-            player.loop = GameState.game.time.events.loop(1000, function () {
+            GameState.Loop = GameState.game.time.events.loop(1000, function () {
                 player.count--;
                 value--;
                 game.add.tween(player).to({
@@ -139,7 +141,7 @@ var GameState = {
                     y: GameState.levelData.map[player.count].y - 25
                 }, 1000, Phaser.Easing.Quadratic.Out, true);
                 if (value <= 0) {
-                    GameState.game.time.events.remove(player.loop);
+                    GameState.game.time.events.remove(GameState.Loop);
                     state = "new";
                 }
             }, this)
@@ -150,7 +152,7 @@ var GameState = {
             console.log('44: Dung chan chua dc di');
         }
         if (go == "ok") {
-            player.loop = GameState.game.time.events.loop(1000, function () {
+            GameState.Loop = GameState.game.time.events.loop(1000, function () {
                 player.count++;
                 value--;
                 console.log(value);
@@ -165,7 +167,7 @@ var GameState = {
                     GameState.sndStop.play();
                 }
                 if (value <= 0) {
-                    GameState.game.time.events.remove(player.loop);
+                    GameState.game.time.events.remove(GameState.Loop);
                     state = "new";
                 }
             }, this)
@@ -224,7 +226,7 @@ var GameState = {
             console.log("win");
             state = "win";
             this.printMessage("Bạn đã thắng!!")
-            GameState.game.time.events.remove(player.loop);
+            GameState.game.time.events.remove(GameState.Loop);
             this.stage.backgroundColor = 'rgba(0,0,0,0.5)';
             this.sndWin.play();
         }
@@ -290,17 +292,25 @@ var GameState = {
     },
 
     createPlayer: function () {
-        for (i=0;i<numPlayer;i++){
+        for (i = 0; i < numP; i++) {
             player[i] = game.add.sprite(this.levelData.map[0].x, this.levelData.map[0].y - 25, 'player');
             player[i].anchor.setTo(0.5, 0.6);
             player[i].scale.setTo(0.6);
-            player[i].frame = i*3+Math.floor(Math.random()*3);
-            player[i].count=0;
+            //            player[i].frame = i*3+Math.floor(Math.random()*3);
+            player[i].frame = i + 1;
+            player[i].count = 0;
         }
+        this.player = player[numPlayer - 1];
     },
 
     sendData: function () {
-
+        turn++;
+        connection.emit('event.data', {
+            room: 'room1',
+            username: numPlayer - 1,
+            val: cou,
+            turn: turn
+        });
     },
 
     receiveData: function () {
