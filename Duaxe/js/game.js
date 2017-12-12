@@ -16,6 +16,7 @@ var GameState = {
         turn = 0;
         cou = 0;
         counter = 15;
+
         this.background = game.add.sprite(0, 0, "background");
         this.background.alpha = 0.8;
         this.text = game.add.text(759, 825, "QUAY", style);
@@ -36,6 +37,8 @@ var GameState = {
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.levelData = JSON.parse(this.game.cache.getText('map'));
         //        game.input.onDown.add(this.gofull, this);
+        graphics = game.add.graphics(0, 0);
+
         this.createPlayer();
         //        GameState.move(60);
         //i = 0;
@@ -54,6 +57,7 @@ var GameState = {
         this.full.events.onInputOut.add(this.out, this.full);
 
         this.printTime();
+
     },
 
     update: function () {
@@ -165,7 +169,7 @@ var GameState = {
             GameState.Loop = GameState.game.time.events.loop(1000, function () {
                 player.count++;
                 value--;
-//                console.log(value);
+                //                console.log(value);
                 game.add.tween(player).to({
                     x: GameState.levelData.map[player.count].x,
                     y: GameState.levelData.map[player.count].y - 25
@@ -309,9 +313,14 @@ var GameState = {
             //            player[i].frame = i*3+Math.floor(Math.random()*3);
             player[i].frame = i + 1;
             player[i].count = 0;
+            graphics.lineStyle(2, 0x0000FF, 1);
+            graphics.drawCircle(GameState.levelData.icon[i].x, GameState.levelData.icon[i].y, 60);
+            graphics.endFill();
+
         }
         this.player = player[numPlayer - 1];
         this.player.bringToTop();
+
     },
 
     sendData: function () {
