@@ -10,6 +10,7 @@ state = 'new';
 statePlayer = "wait";
 spe = 30;
 var player = new Array(4);
+var player_icon = new Array(4);
 var GameState = {
 
     create: function () {
@@ -316,6 +317,11 @@ var GameState = {
             graphics.lineStyle(2, 0x0000FF, 1);
             graphics.drawCircle(GameState.levelData.icon[i].x, GameState.levelData.icon[i].y, 60);
             graphics.endFill();
+            player_icon[i] = game.add.sprite(this.levelData.icon[i].x, this.levelData.icon[i].y, 'player-icon');
+            player_icon[i].anchor.setTo(0.5);
+            player_icon[i].scale.setTo(0.5);
+            //            player[i].frame = i*3+Math.floor(Math.random()*3);
+            player_icon[i].frame = i + 1;
 
         }
         this.player = player[numPlayer - 1];

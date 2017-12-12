@@ -30,6 +30,7 @@ var Preload = {
         this.load.image('block', 'Duaxe/assets/block.png');
         this.load.image('block2', 'Duaxe/assets/block2.png');
         this.load.spritesheet('player', 'Duaxe/assets/12congiap.png', 160, 175);
+        this.load.spritesheet('player-icon', 'Duaxe/assets/12congiap-icon.png', 160, 175);
         this.load.spritesheet('full', 'Duaxe/assets/full.png', 256, 256, 2);
         this.load.text('map', 'Duaxe/assets/map.json');
 
