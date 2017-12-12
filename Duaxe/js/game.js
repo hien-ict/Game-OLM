@@ -165,7 +165,7 @@ var GameState = {
             GameState.Loop = GameState.game.time.events.loop(1000, function () {
                 player.count++;
                 value--;
-                console.log(value);
+//                console.log(value);
                 game.add.tween(player).to({
                     x: GameState.levelData.map[player.count].x,
                     y: GameState.levelData.map[player.count].y - 25
@@ -311,6 +311,7 @@ var GameState = {
             player[i].count = 0;
         }
         this.player = player[numPlayer - 1];
+        this.player.bringToTop();
     },
 
     sendData: function () {
@@ -356,6 +357,18 @@ var GameState = {
     updateTime(msg) {
         if (statePlayer != "wait") {
             counter--;
+        }
+        if (counter <= 0) {
+            statePlayer = "wait";
+            GameState.game.time.events.remove(GameState.Loop2);
+            counter = 16;
+            GameState.updateTime("wait");
+            turn++;
+            connection.emit('event.data', {
+                room: 'room1',
+                username: numPlayer - 1,
+                turn: turn
+            });
         }
         if (msg) {
             this.time.setText('Time: ' + msg);

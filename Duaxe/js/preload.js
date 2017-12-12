@@ -62,12 +62,13 @@ var Preload = {
                 if (data.msg=="Start"){
                     game.state.start("GameState");
                 }
+                if (data.turn){
+                    turn = data.turn;
+                }
 
                 if(data.val){
-                    turn=data.turn;
                     state="play";
                     GameState.play(player[data.username], data.val);
-
                 }
             });
             //            connection.emit('room.join', {name : 'room1', msg : 'tab1 da join'});
