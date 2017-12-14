@@ -27,7 +27,7 @@ var Preload = {
             //            connection.emit('event.data', { room: 'room1' ,name : 'user1', msg : '1'});
         })
         connection.emit('room.join', { room : 'room1'});
-        game.state.start('Home');
+        game.state.start('GameState');
         connection.open();
     }
 }
