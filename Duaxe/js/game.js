@@ -325,11 +325,14 @@ var GameState = {
 
         }
         this.player = player[numPlayer - 1];
+        this.player_icon = player_icon[numPlayer - 1];
         this.player.bringToTop();
 
     },
 
     sendData: function () {
+        GameState.player_icon.tint=0xffffff;
+        GameState.player_icon.scale.setTo(0.5);
         statePlayer = "wait";
         GameState.game.time.events.remove(GameState.Loop2);
         counter = 16;
@@ -352,7 +355,6 @@ var GameState = {
     activePlayer: function () {
         if (statePlayer == "wait") {
             statePlayer = "ok";
-
             GameState.Loop2 = this.game.time.events.loop(Phaser.Timer.SECOND, GameState.updateTime, this);
         }
 
@@ -372,8 +374,12 @@ var GameState = {
     updateTime(msg) {
         if (statePlayer != "wait") {
             counter--;
+            GameState.player_icon.tint=Math.random() * 0xffffff;
+            GameState.player_icon.scale.setTo(0.6);
         }
         if (counter <= 0) {
+            GameState.player_icon.tint=0xffffff;
+            GameState.player_icon.scale.setTo(0.5);
             statePlayer = "wait";
             GameState.game.time.events.remove(GameState.Loop2);
             counter = 16;
