@@ -6,7 +6,7 @@ var Preload = {
     },
 
     preload: function(){
-
+        this.load.image('board', 'Caro/assets/board.png');
 
     },
 
