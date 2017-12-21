@@ -7,6 +7,7 @@ var Preload = {
 
     preload: function(){
         this.load.image('board', 'Caro/assets/board.png');
+        this.load.spritesheet('xo', 'Caro/assets/xo.png',242, 234,2);
 
     },
 
