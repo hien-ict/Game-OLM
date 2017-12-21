@@ -19,10 +19,12 @@ var Preload = {
 //            console.log("connected");
             connection.on('event.ojoin', (data) => {
                 console.log(data);
+                numP++;
             });
             connection.on('event.data', (data) => {
                 console.log(data);
-
+                turn = data.turn;
+                GameState.play(data.turn, data.i, data.j);
             });
             //            connection.emit('room.join', { room : 'room1', msg : 'tab1 da join'});
             //            connection.emit('event.data', { room: 'room1' ,name : 'user1', msg : '1'});
