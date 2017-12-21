@@ -1,4 +1,4 @@
-turn = 0; numP=0;
+turn = 1; numP=0;
 var GameState = {
     create: function () {
         this.createMapState();
