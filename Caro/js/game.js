@@ -1,4 +1,5 @@
-turn = 1; numP=0;
+turn = 1;
+numP = 0;
 var GameState = {
     create: function () {
         this.createMapState();
@@ -9,10 +10,9 @@ var GameState = {
     },
 
     update: function () {
-        if (turn%2==numP-1){
+        if (turn % 2 == numP - 1) {
             this.board.inputEnabled = true;
-        }
-        else{
+        } else {
             this.board.inputEnabled = false;
         }
     },
@@ -25,10 +25,13 @@ var GameState = {
     },
 
     play: function (tu, i, j) {
-        if (tu%2==numP-1){
-            this.board.inputEnabled = true;
-        }
         mapState[i][j] = tu % 2;
+        d1 = 0;
+        d2 = 0;
+        d3 = 0;
+        d4 = 0;
+        this.checkMap(i, j);
+        if (d1 == 4 || d2 == 4 || d3 == 4 || d4 == 4) console.log('Win');
         this.player = game.add.sprite(i * 25 + 12.5, j * 25 + 12.5, 'xo');
         this.player.anchor.setTo(0.5);
         this.player.scale.setTo(0.1);
@@ -45,6 +48,38 @@ var GameState = {
             GameState.sendData(turn, i, j);
         }
 
+    },
+
+    checkMap: function (i, j) {
+        value = mapState[i][j];
+        var x = i,
+            y = j;
+        while (mapState[x][y - 1] == value) {
+            d1++;
+            y--;
+            console.log(d1);
+        }
+        var x = i,
+            y = j;
+        while (mapState[x][y + 1] == value) {
+            d1++;
+            y++;
+            console.log(d1);
+        }
+        var x = i,
+            y = j;
+        while (mapState[x - 1][y] == value) {
+            d2++;
+            x--;
+            console.log(d2);
+        }
+        var x = i,
+            y = j;
+        while (mapState[x + 1][y] == value) {
+            d2++;
+            x++;
+            console.log(d2);
+        }
     },
 
     sendData: function (tu, x, y) {
