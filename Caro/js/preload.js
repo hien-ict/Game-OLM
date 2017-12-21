@@ -18,7 +18,7 @@ var Preload = {
         connection.on('connect', () => {
 //            console.log("connected");
             connection.on('event.ojoin', (data) => {
-//                console.log(data);
+                console.log(data);
             });
             connection.on('event.data', (data) => {
                 console.log(data);
