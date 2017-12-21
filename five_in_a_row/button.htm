@@ -1,0 +1,50 @@
+<html>
+<head>
+<script language="JavaScript">
+<!--
+newSize=0;
+function init() {}
+function resetGame() {window.location="xo.htm"}
+
+//-->
+</script>
+<LINK REL="stylesheet" HREF="/stylesheet.css">
+</head>
+<body bgcolor="#FFFFFF">
+
+
+<form>
+<center>
+
+<table cellspacing=0 cellpadding=0><tr>
+<td colspan=2>
+<p class=bodytext>Your goal in Five-in-a-row is to get five X's in a row while preventing your
+opponent from getting five O's in a row. In this JavaScript implementation, the
+game is played on a 15x15 board. (If you'd like a bigger or smaller board, you
+can set it to any size from 10x10 through 20x20.) You play X's, and the computer
+plays O's. First move is yours. Enjoy!</p>
+</td>
+</tr>
+<tr>
+<td>
+<font size=2 face="Arial,Helvetica,sans-serif">Size:</font>&nbsp;<select onChange="top.boardSize=parseInt(this.options[this.selectedIndex].value);top.init()">
+<option value=10>10
+<option value=11>11
+<option value=12>12
+<option value=13>13
+<option value=14>14
+<option value=15 selected>15
+<option value=16>16
+<option value=17>17
+<option value=18>18
+<option value=19>19
+<option value=20>20
+</select>
+</td><td>
+<font size=2 face="Arial,Helvetica,sans-serif"><input type=button value=" New Game " onClick="setTimeout('top.resetGame()',100)"></font>
+<a href="five_in_a_row.zip">Download ZIP</a></td></tr></table>
+</center>
+</form>
+
+</body>
+</html>
