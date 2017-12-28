@@ -25,17 +25,18 @@ var GameState = {
     },
 
     play: function (tu, i, j) {
+        this.player = game.add.sprite(i * 25 + 12.5, j * 25 + 12.5, 'xo');
+        this.player.anchor.setTo(0.5);
+        this.player.scale.setTo(0.1);
+        this.player.frame = tu % 2;
         mapState[i][j] = tu % 2;
         d1 = 0;
         d2 = 0;
         d3 = 0;
         d4 = 0;
         this.checkMap(i, j);
-        if (d1 == 4 || d2 == 4 || d3 == 4 || d4 == 4) console.log('Win');
-        this.player = game.add.sprite(i * 25 + 12.5, j * 25 + 12.5, 'xo');
-        this.player.anchor.setTo(0.5);
-        this.player.scale.setTo(0.1);
-        this.player.frame = tu % 2;
+        if (d1 >= 4 || d2 >= 4 || d3 >= 4 || d4 >= 4) console.log('Win');
+
     },
 
     placeItem: function (sprite, event) {
@@ -54,31 +55,63 @@ var GameState = {
         value = mapState[i][j];
         var x = i,
             y = j;
-        while (mapState[x][y - 1] == value) {
+        while (y > 0 && mapState[x][y - 1] == value) {
             d1++;
             y--;
             console.log(d1);
         }
         var x = i,
             y = j;
-        while (mapState[x][y + 1] == value) {
+        while (y < 20 && mapState[x][y + 1] == value) {
             d1++;
             y++;
             console.log(d1);
         }
         var x = i,
             y = j;
-        while (mapState[x - 1][y] == value) {
+        while (x > 0 && mapState[x - 1][y] == value) {
             d2++;
             x--;
             console.log(d2);
         }
         var x = i,
             y = j;
-        while (mapState[x + 1][y] == value) {
+        while (x < 20 && mapState[x + 1][y] == value) {
             d2++;
             x++;
             console.log(d2);
+        }
+        var x = i,
+            y = j;
+        while (x > 0 && y > 0 && mapState[x - 1][y - 1] == value) {
+            d3++;
+            x--;
+            y--;
+            console.log(d3);
+        }
+        var x = i,
+            y = j;
+        while (x < 20 && y < 20 && mapState[x + 1][y + 1] == value) {
+            d3++;
+            x++;
+            y++;
+            console.log(d3);
+        }
+        var x = i,
+            y = j;
+        while (x > 0 && y < 20 && mapState[x - 1][y + 1] == value) {
+            d4++;
+            x--;
+            y++;
+            console.log(d4);
+        }
+        var x = i,
+            y = j;
+        while (x < 20 && y > 0 && mapState[x + 1][y - 1] == value) {
+            d4++;
+            x++;
+            y--;
+            console.log(d4);
         }
     },
 
