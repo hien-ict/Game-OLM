@@ -35,8 +35,14 @@ var GameState = {
         d3 = 0;
         d4 = 0;
         this.checkMap(i, j);
-        if (d1 >= 4 || d2 >= 4 || d3 >= 4 || d4 >= 4) console.log('Win');
-
+        if (d1 >= 4 || d2 >= 4 || d3 >= 4 || d4 >= 4){
+            if (turn % 2 != numP - 1) {
+                this.printMessage("WIN!", 35);
+            } else {
+                this.printMessage("LOSE!!", 35);
+            }
+//            game.state.start("Preload");
+        }
     },
 
     placeItem: function (sprite, event) {
@@ -122,6 +128,21 @@ var GameState = {
             i: x,
             j: y
         });
-    }
+    },
+
+    printMessage: function (msg, size, x, y) {
+        var style = {
+            font: "bold " + (size) + "pt Arial",
+            fill: "#ffffff",
+            align: "center",
+            stroke: "#258acc",
+            strokeThickness: 8
+        };
+        x1 = x || 250;
+        y1 = y || 250;
+        this.msg = game.add.text(x1, y1, msg, style);
+        this.msg.anchor.setTo(0.5, 0.5);
+
+    },
 
 }
