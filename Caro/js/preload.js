@@ -8,6 +8,8 @@ var Preload = {
     preload: function(){
         this.load.image('board', 'Caro/assets/board.png');
         this.load.image('background', 'Caro/assets/background.png');
+        this.load.image('home', 'Caro/assets/home.png');
+        this.load.image('reset', 'Caro/assets/reset.png');
         this.load.spritesheet('xo', 'Caro/assets/xo.png',242, 234,2);
         this.load.spritesheet('full', 'Duaxe/assets/full.png', 256, 256, 2);
         game.stage.disableVisibilityChange = true;

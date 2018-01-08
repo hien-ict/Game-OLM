@@ -2,6 +2,18 @@ var Game = {
     create: function () {
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.background = game.add.sprite(0, 2.5, "background");
+        this.home = game.add.sprite(605, 80, "home");
+        this.home.anchor.setTo(0.5);
+        this.home.scale.setTo(0.25);
+        this.home.inputEnabled = true;
+        this.home.input.useHandCursor = true;
+        this.home.events.onInputDown.add(this.resetGame, this);
+        this.reset = game.add.sprite(535, 80, "reset");
+        this.reset.anchor.setTo(0.5);
+        this.reset.scale.setTo(0.25);
+        this.reset.inputEnabled = true;
+        this.reset.input.useHandCursor = true;
+        this.reset.events.onInputDown.add(this.resetGame, this);
         boardSize = 20;
         userSq = 1;
         machSq = -1;
