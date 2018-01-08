@@ -35,13 +35,14 @@ var GameState = {
         d3 = 0;
         d4 = 0;
         this.checkMap(i, j);
-        if (d1 >= 4 || d2 >= 4 || d3 >= 4 || d4 >= 4){
+        if (d1 >= 4 || d2 >= 4 || d3 >= 4 || d4 >= 4) {
             if (turn % 2 != numP - 1) {
-                this.printMessage("WIN!", 35);
+                this.printMessage("WIN!", 35, "f", "f", "0");
             } else {
                 this.printMessage("LOSE!!", 35);
             }
-//            game.state.start("Preload");
+            //            game.state.start("Preload");
+            connection.connected = false;
         }
     },
 
@@ -130,13 +131,16 @@ var GameState = {
         });
     },
 
-    printMessage: function (msg, size, x, y) {
+    printMessage: function (msg, size, r, g, b, x, y) {
+        r = r || "f";
+        g = g || "f";
+        b = b || "f";
         var style = {
             font: "bold " + (size) + "pt Arial",
-            fill: "#ffffff",
+            fill: "#" + r + g + b,
             align: "center",
             stroke: "#258acc",
-            strokeThickness: 8
+            strokeThickness: 6
         };
         x1 = x || 250;
         y1 = y || 250;
