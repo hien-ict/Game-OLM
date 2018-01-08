@@ -14,6 +14,7 @@ var Game = {
         this.reset.inputEnabled = true;
         this.reset.input.useHandCursor = true;
         this.reset.events.onInputDown.add(this.resetGame, this);
+
         boardSize = 20;
         userSq = 1;
         machSq = -1;
@@ -39,6 +40,10 @@ var Game = {
         this.full.events.onInputDown.add(this.gofull, this);
         this.full.events.onInputOver.add(this.over, this.full);
         this.full.events.onInputOut.add(this.out, this.full);
+
+        this.highlight = game.add.sprite(300, 200, "highlight");
+        this.highlight.animations.add('walk', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
+        this.highlight.animations.play('walk');
     },
 
     update: function () {

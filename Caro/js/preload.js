@@ -11,7 +11,8 @@ var Preload = {
         this.load.image('home', 'Caro/assets/home.png');
         this.load.image('reset', 'Caro/assets/reset.png');
         this.load.spritesheet('xo', 'Caro/assets/xo.png',242, 234,2);
-        this.load.spritesheet('full', 'Duaxe/assets/full.png', 256, 256, 2);
+        this.load.spritesheet('full', 'Caro/assets/full.png', 256, 256, 2);
+        this.load.spritesheet('highlight', 'Caro/assets/highlight.png', 200, 100, 12);
         game.stage.disableVisibilityChange = true;
     },
 
