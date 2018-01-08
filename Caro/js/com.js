@@ -19,7 +19,7 @@ var Game = {
         w = new Array(0, 20, 17, 15.4, 14, 10);
         nPos = new Array();
         dirA = new Array();
-        this.full = game.add.sprite(610, 470, 'full');
+        this.full = game.add.sprite(615, 480, 'full');
         this.full.anchor.setTo(0.5);
         this.full.scale.setTo(0.15);
         this.full.inputEnabled = true;
