@@ -1,5 +1,7 @@
 var Game = {
     create: function () {
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.background = game.add.sprite(0, 2.5, "background");
         boardSize = 20;
         userSq = 1;
         machSq = -1;
@@ -17,6 +19,14 @@ var Game = {
         w = new Array(0, 20, 17, 15.4, 14, 10);
         nPos = new Array();
         dirA = new Array();
+        this.full = game.add.sprite(610, 470, 'full');
+        this.full.anchor.setTo(0.5);
+        this.full.scale.setTo(0.15);
+        this.full.inputEnabled = true;
+        this.full.input.useHandCursor = true;
+        this.full.events.onInputDown.add(this.gofull, this);
+        this.full.events.onInputOver.add(this.over, this.full);
+        this.full.events.onInputOut.add(this.out, this.full);
     },
 
     update: function () {
@@ -392,5 +402,25 @@ var Game = {
 
     resetGame: function(){
         game.state.start('Game');
+    },
+
+    gofull: function () {
+        if (game.scale.isFullScreen) {
+            game.scale.stopFullScreen();
+            this.full.frame = 0;
+            this.full.scale.setTo(0.15);
+        } else {
+            game.scale.startFullScreen(false);
+            this.full.frame = 1;
+            this.full.scale.setTo(0.15);
+        }
+    },
+
+    out() {
+        this.scale.setTo(0.15);
+    },
+
+    over() {
+        this.scale.setTo(0.20);
     }
 }
