@@ -29,6 +29,7 @@ var Game = {
         this.board = game.add.sprite(0, 0, "board");
         this.board.inputEnabled = true;
         this.board.events.onInputDown.add(this.placeItem, this);
+//        this.board.events.onInputOver.add(this.showCoordinates, this);
         w = new Array(0, 20, 17, 15.4, 14, 10);
         nPos = new Array();
         dirA = new Array();
@@ -41,13 +42,14 @@ var Game = {
         this.full.events.onInputOver.add(this.over, this.full);
         this.full.events.onInputOut.add(this.out, this.full);
 
-        this.highlight = game.add.sprite(300, 200, "highlight");
-        this.highlight.animations.add('walk', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
-        this.highlight.animations.play('walk');
+        this.createPlayer();
+
+
     },
 
     update: function () {
-
+        this.controlHighlight();
+        this.showCoordinates();
     },
 
     createArray: function () {
@@ -63,6 +65,45 @@ var Game = {
         q.forEach(function (x, i) {
             q[i] = new Array(20).fill(0);
         });
+    },
+
+    createPlayer: function(){
+        var style={
+            font: "bold 16pt Arial",
+            align: "center"
+        }
+        this.showPointer = game.add.sprite(500, 150, "player");
+        this.showPointer.frame = 7;
+        this.showPointer.scale.setTo(0.7);
+        this.ho = game.add.text(540, 167, '');
+        this.ve = game.add.text(605, 167, '');
+
+
+        this.Rx = game.add.text(540, 167, '');
+        this.Ry = game.add.text(540, 167, '');
+
+        this.showPlayer = game.add.sprite(500, 250, "player");
+        this.showPlayer.scale.setTo(0.7);
+        this.showPlayer.animations.add('walk', [0, 1, 2], 1, true);
+        this.showPlayer.animations.loop = true;
+        this.showPlayer.animations.play('walk');
+        this.Px = game.add.text(536, 290, '', style);
+        this.Py = game.add.text(601, 290, '', style);
+
+        this.highlightPlayer = game.add.sprite(500, 250, "highlight");
+        this.highlightPlayer.scale.setTo(0.7);
+        this.highlightPlayer.animations.add('walk', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
+        this.highlightPlayer.animations.play('walk');
+
+        this.robot = game.add.sprite(500, 350, "player");
+        this.robot.scale.setTo(0.7);
+        this.robot.animations.add('walk', [3, 4, 5], 1, true);
+        this.robot.animations.loop = true;
+        this.robot.animations.play('walk');
+        this.highlightRobot = game.add.sprite(500, 350, "highlight");
+        this.highlightRobot.scale.setTo(0.7);
+        this.highlightRobot.animations.add('walk', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
+        this.highlightRobot.animations.play('walk');
     },
 
     placeItem: function (sprite, event) {
@@ -88,11 +129,10 @@ var Game = {
 
         dly = 500;
 
-        if (this.winningPos(iMove, jMove, userSq) == winningMove){
+        if (this.winningPos(iMove, jMove, userSq) == winningMove) {
             setTimeout('Game.printMessage("WIN!", 35, "f", "f", "0");', dly);
-            setTimeout('Game.resetGame();', 1000);
-        }
-        else setTimeout("Game.machineMove(iLastUserMove,jLastUserMove);", dly);
+            //            setTimeout('Game.resetGame();', 1000);
+        } else setTimeout("Game.machineMove(iLastUserMove,jLastUserMove);", dly);
     },
 
     machineMove: function (iUser, jUser) {
@@ -129,11 +169,10 @@ var Game = {
 
         this.drawSquare(iMach, jMach, machSq);
 
-        if (this.winningPos(iMach, jMach, machSq) == winningMove){
+        if (this.winningPos(iMach, jMach, machSq) == winningMove) {
             setTimeout('Game.printMessage("LOSE!!", 35);', 400);
-            setTimeout('Game.resetGame();', 2000);
-        }
-        else setTimeout("myTurn=false;", 500);
+            //            setTimeout('Game.resetGame();', 2000);
+        } else setTimeout("myTurn=false;", 500);
     },
 
     hasNeighbors: function (i, j) {
@@ -386,12 +425,14 @@ var Game = {
 
     drawSquare: function (x, y, player) {
         if (player == userSq) {
+            this.showP(x,y);
             this.player = game.add.sprite(x * 25 + 12.5, y * 25 + 12.5, 'xo');
             this.player.anchor.setTo(0.5);
             this.player.scale.setTo(0.1);
             this.player.frame = 0;
         } else
         if (player == machSq) {
+            this.showR(x,y);
             this.player = game.add.sprite(x * 25 + 12.5, y * 25 + 12.5, 'xo');
             this.player.anchor.setTo(0.5);
             this.player.scale.setTo(0.1);
@@ -417,8 +458,51 @@ var Game = {
 
     },
 
-    resetGame: function(){
-        game.state.start('Game');
+    resetGame: function () {
+                game.state.start('Game');
+    },
+
+    controlHighlight: function(){
+        if (myTurn==false) {
+            this.highlightRobot.animations.stop('walk');
+            this.highlightRobot.frame = 12;
+            this.robot.animations.stop("walk");
+            this.robot.frame = 9;
+
+            this.highlightPlayer.animations.play('walk');
+//            this.highlightPlayer.frame = 0;
+            this.showPlayer.animations.play('walk');
+        } else {
+            this.highlightPlayer.animations.stop('walk');
+            this.highlightPlayer.frame = 12;
+            this.showPlayer.animations.stop("walk");
+            this.showPlayer.frame = 6;
+
+            this.highlightRobot.animations.play('walk');
+            this.robot.animations.play('walk');
+
+        }
+    },
+
+    showCoordinates: function(){
+        var x = game.input.mousePointer.position.x,
+            y = game.input.mousePointer.position.y;
+        var i = Math.floor(x / 25),
+            j = Math.floor(y / 25);
+        if (i>19) i=19;
+
+        this.ho.setText(i+1);
+        this.ve.setText(j+1);
+    },
+
+    showP: function(x,y){
+        this.Px.setText(x+1);
+        this.Py.setText(y+1);
+    },
+
+    showR: function(x,y){
+        this.Rx.setText(x+1);
+        this.Ry.setText(y+1);
     },
 
     gofull: function () {
