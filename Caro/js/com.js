@@ -487,7 +487,6 @@ var Game = {
     },
 
     showCoordinates: function () {
-
         var x = game.input.mousePointer.position.x,
             y = game.input.mousePointer.position.y;
         var i = Math.floor(x / 25),
