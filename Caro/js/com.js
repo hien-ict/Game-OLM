@@ -27,9 +27,9 @@ var Game = {
         iLastUserMove = 0;
         jLastUserMove = 0;
         this.board = game.add.sprite(0, 0, "board");
-        this.board.inputEnabled = true;
+
         this.board.events.onInputDown.add(this.placeItem, this);
-//        this.board.events.onInputOver.add(this.showCoordinates, this);
+        //        this.board.events.onInputOver.add(this.showCoordinates, this);
         w = new Array(0, 20, 17, 15.4, 14, 10);
         nPos = new Array();
         dirA = new Array();
@@ -67,8 +67,8 @@ var Game = {
         });
     },
 
-    createPlayer: function(){
-        var style={
+    createPlayer: function () {
+        var style = {
             font: "bold 16pt Arial",
             align: "center"
         }
@@ -77,10 +77,6 @@ var Game = {
         this.showPointer.scale.setTo(0.7);
         this.ho = game.add.text(540, 167, '');
         this.ve = game.add.text(605, 167, '');
-
-
-        this.Rx = game.add.text(540, 167, '');
-        this.Ry = game.add.text(540, 167, '');
 
         this.showPlayer = game.add.sprite(500, 250, "player");
         this.showPlayer.scale.setTo(0.7);
@@ -100,6 +96,8 @@ var Game = {
         this.robot.animations.add('walk', [3, 4, 5], 1, true);
         this.robot.animations.loop = true;
         this.robot.animations.play('walk');
+        this.Rx = game.add.text(536, 393, '', style);
+        this.Ry = game.add.text(601, 393, '', style);
         this.highlightRobot = game.add.sprite(500, 350, "highlight");
         this.highlightRobot.scale.setTo(0.7);
         this.highlightRobot.animations.add('walk', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
@@ -425,14 +423,14 @@ var Game = {
 
     drawSquare: function (x, y, player) {
         if (player == userSq) {
-            this.showP(x,y);
+            this.showP(x, y);
             this.player = game.add.sprite(x * 25 + 12.5, y * 25 + 12.5, 'xo');
             this.player.anchor.setTo(0.5);
             this.player.scale.setTo(0.1);
             this.player.frame = 0;
         } else
         if (player == machSq) {
-            this.showR(x,y);
+            this.showR(x, y);
             this.player = game.add.sprite(x * 25 + 12.5, y * 25 + 12.5, 'xo');
             this.player.anchor.setTo(0.5);
             this.player.scale.setTo(0.1);
@@ -459,20 +457,24 @@ var Game = {
     },
 
     resetGame: function () {
-                game.state.start('Game');
+        game.state.start('Game');
     },
 
-    controlHighlight: function(){
-        if (myTurn==false) {
+    controlHighlight: function () {
+        if (myTurn == false) {
+            this.board.inputEnabled = true;
+            this.board.input.useHandCursor = true;
             this.highlightRobot.animations.stop('walk');
             this.highlightRobot.frame = 12;
             this.robot.animations.stop("walk");
             this.robot.frame = 9;
 
             this.highlightPlayer.animations.play('walk');
-//            this.highlightPlayer.frame = 0;
+            //            this.highlightPlayer.frame = 0;
             this.showPlayer.animations.play('walk');
         } else {
+            this.board.inputEnabled = false;
+            this.board.input.useHandCursor = false;
             this.highlightPlayer.animations.stop('walk');
             this.highlightPlayer.frame = 12;
             this.showPlayer.animations.stop("walk");
@@ -484,25 +486,26 @@ var Game = {
         }
     },
 
-    showCoordinates: function(){
+    showCoordinates: function () {
+
         var x = game.input.mousePointer.position.x,
             y = game.input.mousePointer.position.y;
         var i = Math.floor(x / 25),
             j = Math.floor(y / 25);
-        if (i>19) i=19;
+        if (i > 19) i = 19;
 
-        this.ho.setText(i+1);
-        this.ve.setText(j+1);
+        this.ho.setText(i + 1);
+        this.ve.setText(j + 1);
     },
 
-    showP: function(x,y){
-        this.Px.setText(x+1);
-        this.Py.setText(y+1);
+    showP: function (x, y) {
+        this.Px.setText(x + 1);
+        this.Py.setText(y + 1);
     },
 
-    showR: function(x,y){
-        this.Rx.setText(x+1);
-        this.Ry.setText(y+1);
+    showR: function (x, y) {
+        this.Rx.setText(x + 1);
+        this.Ry.setText(y + 1);
     },
 
     gofull: function () {
