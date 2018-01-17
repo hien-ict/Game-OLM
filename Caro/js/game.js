@@ -4,17 +4,42 @@ var GameState = {
     create: function () {
         this.createMapState();
 
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.background = game.add.sprite(0, 2.5, "background");
+        this.home = game.add.sprite(605, 80, "home");
+        this.home.anchor.setTo(0.5);
+        this.home.scale.setTo(0.25);
+        this.home.inputEnabled = true;
+        this.home.input.useHandCursor = true;
+        this.home.events.onInputDown.add(this.resetGame, this);
+        this.reset = game.add.sprite(535, 80, "reset");
+        this.reset.anchor.setTo(0.5);
+        this.reset.scale.setTo(0.25);
+        this.reset.inputEnabled = true;
+        this.reset.input.useHandCursor = true;
+        this.reset.events.onInputDown.add(this.resetGame, this);
+
+
         this.board = game.add.sprite(0, 0, "board");
         this.board.inputEnabled = false;
         this.board.events.onInputDown.add(this.placeItem, this);
+
+        this.full = game.add.sprite(615, 480, 'full');
+        this.full.anchor.setTo(0.5);
+        this.full.scale.setTo(0.15);
+        this.full.inputEnabled = true;
+        this.full.input.useHandCursor = true;
+        this.full.events.onInputDown.add(this.gofull, this);
+        this.full.events.onInputOver.add(this.over, this.full);
+        this.full.events.onInputOut.add(this.out, this.full);
+
+        this.createPlayer();
     },
 
     update: function () {
-        if (turn % 2 == numP - 1) {
-            this.board.inputEnabled = true;
-        } else {
-            this.board.inputEnabled = false;
-        }
+
+        this.controlHighlight();
+        this.showCoordinates();
     },
 
     createMapState: function () {
@@ -42,7 +67,12 @@ var GameState = {
                 this.printMessage("LOSE!!", 35);
             }
             //            game.state.start("Preload");
-            connection.connected = false;
+//            connection.connected = false;
+        }
+        if (turn % 2 == numP - 1) {
+            this.showR(i,j);
+        } else {
+            this.showP(i,j);
         }
     },
 
@@ -147,6 +177,113 @@ var GameState = {
         this.msg = game.add.text(x1, y1, msg, style);
         this.msg.anchor.setTo(0.5, 0.5);
 
+    },
+
+    createPlayer: function () {
+        var style = {
+            font: "bold 16pt Arial",
+            align: "center"
+        }
+        this.showPointer = game.add.sprite(500, 150, "player");
+        this.showPointer.frame = 7;
+        this.showPointer.scale.setTo(0.7);
+        this.ho = game.add.text(540, 167, '');
+        this.ve = game.add.text(605, 167, '');
+
+        this.showPlayer = game.add.sprite(500, 250, "player");
+        this.showPlayer.scale.setTo(0.7);
+        this.showPlayer.animations.add('walk', [0, 1, 2], 1, true);
+        this.showPlayer.animations.loop = true;
+        this.showPlayer.animations.play('walk');
+        this.Px = game.add.text(536, 290, '', style);
+        this.Py = game.add.text(601, 290, '', style);
+
+        this.highlightPlayer = game.add.sprite(500, 250, "highlight");
+        this.highlightPlayer.scale.setTo(0.7);
+        this.highlightPlayer.animations.add('walk', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
+        this.highlightPlayer.animations.play('walk');
+
+        this.robot = game.add.sprite(500, 350, "player");
+        this.robot.scale.setTo(0.7);
+        this.robot.animations.add('walk', [3, 4, 5], 1, true);
+        this.robot.animations.loop = true;
+        this.robot.animations.play('walk');
+        this.Rx = game.add.text(536, 393, '', style);
+        this.Ry = game.add.text(601, 393, '', style);
+        this.highlightRobot = game.add.sprite(500, 350, "highlight");
+        this.highlightRobot.scale.setTo(0.7);
+        this.highlightRobot.animations.add('walk', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5, true);
+        this.highlightRobot.animations.play('walk');
+    },
+
+    resetGame: function () {
+        game.state.start('Game');
+    },
+
+    gofull: function () {
+        if (game.scale.isFullScreen) {
+            game.scale.stopFullScreen();
+            this.full.frame = 0;
+            this.full.scale.setTo(0.15);
+        } else {
+            game.scale.startFullScreen(false);
+            this.full.frame = 1;
+            this.full.scale.setTo(0.15);
+        }
+    },
+
+    out() {
+        this.scale.setTo(0.15);
+    },
+
+    over() {
+        this.scale.setTo(0.20);
+    },
+
+    showCoordinates: function () {
+        var x = game.input.mousePointer.position.x,
+            y = game.input.mousePointer.position.y;
+        var i = Math.floor(x / 25),
+            j = Math.floor(y / 25);
+        if (i > 19) i = 19;
+
+        this.ho.setText(i + 1);
+        this.ve.setText(j + 1);
+    },
+
+    showP: function (x, y) {
+        this.Px.setText(x + 1);
+        this.Py.setText(y + 1);
+    },
+
+    showR: function (x, y) {
+        this.Rx.setText(x + 1);
+        this.Ry.setText(y + 1);
+    },
+
+    controlHighlight: function () {
+
+        if (turn % 2 == numP - 1) {
+            this.board.inputEnabled = true;
+            this.board.input.useHandCursor = true;
+            this.highlightRobot.animations.stop('walk');
+            this.highlightRobot.frame = 12;
+            this.robot.animations.stop("walk");
+            this.robot.frame = 9;
+
+            this.highlightPlayer.animations.play('walk');
+            //            this.highlightPlayer.frame = 0;
+            this.showPlayer.animations.play('walk');
+        } else {
+            this.board.inputEnabled = false;
+            this.highlightPlayer.animations.stop('walk');
+            this.highlightPlayer.frame = 12;
+            this.showPlayer.animations.stop("walk");
+            this.showPlayer.frame = 6;
+
+            this.highlightRobot.animations.play('walk');
+            this.robot.animations.play('walk');
+        }
     },
 
 }
