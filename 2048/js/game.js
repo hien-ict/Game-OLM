@@ -1,63 +1,56 @@
 function createGame(game) {
     var gameOptions = {
-        bestScore: 0,
-        tileSize: 100,
-        colors: {
-            0: 0xeee4da,
-            2: 0xeee4da,
-            4: 0xede0c8,
-            8: 0xf2b179,
-            16: 0xf59563,
-            32: 0xf67c5f,
-            64: 0xf65e3b,
-            128: 0xedcf72,
-            256: 0xedcc61,
-            512: 0xedc850,
-            1024: 0xedc53f,
-            2048: 0xedc22e,
-            4096: 0xFF4444,
-            8192: 0xFF3333,
-            16384: 0xFF2222,
-            32768: 0xFF1111,
-            65536: 0xFF0000
+            bestScore: 0,
+            tileSize: 100,
+            colors: {
+                0: 0xeee4da,
+                2: 0xeee4da,
+                4: 0xede0c8,
+                8: 0xf2b179,
+                16: 0xf59563,
+                32: 0xf67c5f,
+                64: 0xf65e3b,
+                128: 0xedcf72,
+                256: 0xedcc61,
+                512: 0xedc850,
+                1024: 0xedc53f,
+                2048: 0xedc22e,
+                4096: 0xFF4444,
+                8192: 0xFF3333,
+                16384: 0xFF2222,
+                32768: 0xFF1111,
+                65536: 0xFF0000
+            },
+            tweenSpeed: 30
         },
-        tweenSpeed: 30
-    }
+        score, stage, addTweenACT;
+    var style = {
+        font: '35px Arial',
+        fill: '#fff',
+        align: "center",
+        stroke: "#ff0000",
+        strokeThickness: 2,
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    };
     return {
+        //        self = this,
         preload: function () {
             game.load.image("tile", "2048/assets/tile.png");
             game.load.image("background", "2048/assets/background.png");
+            game.load.image("newgame", "2048/assets/newgame.png");
         },
         create: function () {
+            self = this;
+            score = 0;
             game.scale.pageAlignHorizontally = true;
             game.scale.pageAlignVertically = true;
             game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             game.stage.backgroundColor = 0x444444;
-            game.add.sprite(0, 0, 'background')
-            this.fieldArray = [];
-            this.fieldGroup = game.add.group();
-            for (var i = 0; i < 4; i++) {
-                this.fieldArray[i] = [];
-                for (var j = 0; j < 4; j++) {
-                    var two = game.add.sprite(j * gameOptions.tileSize + gameOptions.tileSize / 2, i * gameOptions.tileSize + gameOptions.tileSize / 2, "tile");
-                    two.anchor.set(0.5);
-                    two.scale.set(gameOptions.tileSize / 200);
-                    var text = game.add.text(0, 0, "", {
-                        font: "bold 64px Arial",
-                        align: "center"
-                    });
-                    text.anchor.set(0.5);
-                    two.addChild(text);
-                    two.alpha = 0.35;
-                    two.visible = true;
-                    this.fieldArray[i][j] = {
-                        tileValue: 0,
-                        tileSprite: two,
-                        canUpgrade: true
-                    }
-                    this.fieldGroup.add(two);
-                }
-            }
+            this.newGame();
+
+
+
+
             this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
             this.upKey.onDown.add(this.handleKey, this);
             this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
@@ -66,12 +59,11 @@ function createGame(game) {
             this.leftKey.onDown.add(this.handleKey, this);
             this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
             this.rightKey.onDown.add(this.handleKey, this);
-            this.canMove = false;
-            this.addTwo();
-            this.addTwo();
+
         },
-        addTwo: function () {
+        addBox: function () {
             var emptyTiles = [];
+            //            console.log(emptyTiles);
             for (var i = 0; i < 4; i++) {
                 for (var j = 0; j < 4; j++) {
                     if (this.fieldArray[i][j].tileValue == 0) {
@@ -83,9 +75,17 @@ function createGame(game) {
                 }
             }
             var choosenTile = Phaser.ArrayUtils.getRandomItem(emptyTiles);
-            this.fieldArray[choosenTile.row][choosenTile.col].tileValue = 2;
-            this.fieldArray[choosenTile.row][choosenTile.col].tileSprite.visible = true;
-            this.fieldArray[choosenTile.row][choosenTile.col].tileSprite.children[0].text = "2";
+            var value = Math.random() < 0.9 ? 2 : 4;
+            if (value == 2) {
+                this.fieldArray[choosenTile.row][choosenTile.col].tileValue = 2;
+                this.fieldArray[choosenTile.row][choosenTile.col].tileSprite.visible = true;
+                this.fieldArray[choosenTile.row][choosenTile.col].tileSprite.children[0].text = "2";
+            } else {
+                this.fieldArray[choosenTile.row][choosenTile.col].tileValue = 4;
+                this.fieldArray[choosenTile.row][choosenTile.col].tileSprite.visible = true;
+                this.fieldArray[choosenTile.row][choosenTile.col].tileSprite.children[0].text = "4";
+            }
+
             var fadeIn = game.add.tween(this.fieldArray[choosenTile.row][choosenTile.col].tileSprite);
             fadeIn.to({
                 alpha: 1
@@ -95,7 +95,7 @@ function createGame(game) {
             }, this);
         },
         handleKey: function (e) {
-            if (this.canMove) {
+            if (stage == true && this.canMove && this.checkStage()) {
                 switch (e.keyCode) {
                     case Phaser.Keyboard.A:
                         this.fieldGroup.sort("x", Phaser.Group.SORT_ASCENDING);
@@ -134,6 +134,8 @@ function createGame(game) {
                         }
                         if (this.isInsideBoard(rowToWatch + rowSteps, colToWatch + colSteps) && (this.fieldArray[rowToWatch + rowSteps][colToWatch + colSteps].tileValue == tileValue) && this.fieldArray[rowToWatch + rowSteps][colToWatch + colSteps].canUpgrade && this.fieldArray[rowToWatch][colToWatch].canUpgrade) {
                             this.fieldArray[rowToWatch + rowSteps][colToWatch + colSteps].tileValue = tileValue * 2;
+                            score += tileValue;
+                            this.updateScore();
                             this.fieldArray[rowToWatch + rowSteps][colToWatch + colSteps].canUpgrade = false;
                             this.fieldArray[rowToWatch][colToWatch].tileValue = 0;
                             this.moveTile(this.fieldArray[rowToWatch][colToWatch].tileSprite, rowToWatch + rowSteps, colToWatch + colSteps, Math.abs(rowSteps + colSteps), true);
@@ -174,14 +176,16 @@ function createGame(game) {
                     growTween.onComplete.add(function () {
                         this.movingTiles--;
                         if (this.movingTiles == 0) {
+
+                            this.addBox();
                             this.resetTiles();
-                            this.addTwo();
                         }
                     }, this)
                 }
                 if (this.movingTiles == 0) {
+
+                    this.addBox();
                     this.resetTiles();
-                    this.addTwo();
                 }
             }, this);
         },
@@ -206,6 +210,109 @@ function createGame(game) {
         },
         isInsideBoard: function (row, col) {
             return (row >= 0) && (col >= 0) && (row < 4) && (col < 4);
+        },
+        createScore: function () {
+            this.score = game.add.text(469, 85, 0000, {
+                font: "bold 32px Arial",
+                align: "center",
+                fill: "#ffffff"
+            });
+            this.score.anchor.setTo(0.5);
+            this.bestScore = game.add.text(469, 176, gameOptions.bestScore, {
+                font: "bold 32px Arial",
+                align: "center",
+                fill: "#ffffff"
+            });
+            this.bestScore.anchor.setTo(0.5);
+        },
+        updateScore: function () {
+            if (gameOptions.bestScore < score) gameOptions.bestScore = score;
+            this.score.setText(score);
+            this.bestScore.setText(gameOptions.bestScore);
+        },
+        newGame: function () {
+            score = 0;
+            game.add.sprite(0, 0, 'background');
+            this.fieldArray = [];
+            this.fieldGroup = game.add.group();
+            for (var i = 0; i < 4; i++) {
+                this.fieldArray[i] = [];
+                for (var j = 0; j < 4; j++) {
+                    var two = game.add.sprite(j * gameOptions.tileSize + gameOptions.tileSize / 2, i * gameOptions.tileSize + gameOptions.tileSize / 2, "tile");
+                    two.anchor.set(0.5);
+                    two.scale.set(gameOptions.tileSize / 200);
+                    var text = game.add.text(0, 0, "", {
+                        font: "bold 64px Arial",
+                        align: "center"
+                    });
+                    text.anchor.set(0.5);
+                    two.addChild(text);
+                    two.alpha = 0;
+                    two.visible = false;
+                    this.fieldArray[i][j] = {
+                        tileValue: 0,
+                        tileSprite: two,
+                        canUpgrade: true
+                    }
+                    this.fieldGroup.add(two);
+                }
+            }
+            this.canMove = false;
+            this.addBox();
+            this.addBox();
+
+            this.createScore();
+            stage = true;
+            this.newGameBtn = game.add.sprite(469, 300, 'newgame');
+            this.newGameBtn.inputEnabled = true;
+            this.newGameBtn.input.priorityID = 1;
+            this.newGameBtn.input.useHandCursor = true;
+            this.newGameBtn.anchor.setTo(0.5);
+            this.newGameBtn.input.pixelPerfectClick = true;
+            this.newGameBtn.input.pixelPerfectOver = true;
+            this.newGameBtn.events.onInputDown.add(this.newGame, this);
+        },
+        checkStage: function () {
+            var flag = false;
+            for (var i = 0; i < 4; i++) {
+                for (var j = 0; j < 4; j++) {
+                    //                    console.log(this);
+                    if (this.fieldArray[i][j].tileValue > 0) {
+                        if ((i < 3) && (this.fieldArray[i][j].tileValue == this.fieldArray[i + 1][j].tileValue)) {
+                            flag = true;
+                        }
+                        if ((j < 3) && (this.fieldArray[i][j].tileValue == this.fieldArray[i][j + 1].tileValue)) {
+                            flag = true;
+                        }
+                        if ((i > 0) && (this.fieldArray[i][j].tileValue == this.fieldArray[i - 1][j].tileValue)) {
+                            flag = true;
+                        }
+                        if ((j > 0) && (this.fieldArray[i][j].tileValue == this.fieldArray[i][j - 1].tileValue)) {
+                            flag = true;
+                        }
+                    } else {
+                        return true;
+                    }
+
+                }
+            }
+            if (flag == false) {
+                this.text = game.add.text(270, 200, "GAME OVER!", style);
+                this.text.anchor.setTo(0.5);
+                stage = false;
+                this.addTween();
+                return false;
+            };
+            return true;
+        },
+        addTween: function () {
+            console.log("add");
+            self.newGameBtn.scale.setTo(1);
+            addTweenACT = game.add.tween(self.newGameBtn.scale).to({
+                x: 1.1,
+                y: 1.1
+            }, 500, Phaser.Easing.Cubic.InOut, true, 0, 1, true);
+            if (stage == false) addTweenACT.onComplete.addOnce(self.addTween);
         }
     }
 
