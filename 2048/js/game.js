@@ -24,6 +24,7 @@ function createGame(game) {
             tweenSpeed: 30
         },
         score, stage, addTweenACT;
+    var oldX, oldY, newX, newY;
     var style = {
         font: '35px Arial',
         fill: '#fff',
@@ -48,18 +49,33 @@ function createGame(game) {
             game.stage.backgroundColor = 0x444444;
             this.newGame();
 
+            this.background.inputEnabled = true;
+            this.background.events.onInputDown.add(this.inputDown, this);
+            this.background.events.onInputUp.add(this.inputUp, this);
 
+            if ((newX - oldX) > (newY - oldY)) {
 
+                this.fieldGroup.sort("x", Phaser.Group.SORT_ASCENDING);
+                this.handleMove(0, -1);
+            }
 
-            this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+            this.wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+            this.wKey.onDown.add(this.handleKey, this);
+            this.sKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+            this.sKey.onDown.add(this.handleKey, this);
+            this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+            this.aKey.onDown.add(this.handleKey, this);
+            this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+            this.dKey.onDown.add(this.handleKey, this);
+
+            this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             this.upKey.onDown.add(this.handleKey, this);
-            this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.S);
+            this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
             this.downKey.onDown.add(this.handleKey, this);
-            this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+            this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
             this.leftKey.onDown.add(this.handleKey, this);
-            this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+            this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
             this.rightKey.onDown.add(this.handleKey, this);
-
         },
         addBox: function () {
             var emptyTiles = [];
@@ -97,19 +113,19 @@ function createGame(game) {
         handleKey: function (e) {
             if (stage == true && this.canMove && this.checkStage()) {
                 switch (e.keyCode) {
-                    case Phaser.Keyboard.A:
+                    case Phaser.Keyboard.A, Phaser.Keyboard.LEFT:
                         this.fieldGroup.sort("x", Phaser.Group.SORT_ASCENDING);
                         this.handleMove(0, -1);
                         break;
-                    case Phaser.Keyboard.D:
+                    case Phaser.Keyboard.D, Phaser.Keyboard.RIGHT:
                         this.fieldGroup.sort("x", Phaser.Group.SORT_DESCENDING);
                         this.handleMove(0, 1);
                         break;
-                    case Phaser.Keyboard.W:
+                    case Phaser.Keyboard.W, Phaser.Keyboard.UP:
                         this.fieldGroup.sort("y", Phaser.Group.SORT_ASCENDING);
                         this.handleMove(-1, 0);
                         break;
-                    case Phaser.Keyboard.S:
+                    case Phaser.Keyboard.S, Phaser.Keyboard.DOWN:
                         this.fieldGroup.sort("y", Phaser.Group.SORT_DESCENDING);
                         this.handleMove(1, 0);
                         break;
@@ -232,7 +248,7 @@ function createGame(game) {
         },
         newGame: function () {
             score = 0;
-            game.add.sprite(0, 0, 'background');
+            this.background = game.add.sprite(0, 0, 'background');
             this.fieldArray = [];
             this.fieldGroup = game.add.group();
             for (var i = 0; i < 4; i++) {
@@ -313,7 +329,41 @@ function createGame(game) {
                 y: 1.1
             }, 500, Phaser.Easing.Cubic.InOut, true, 0, 1, true);
             if (stage == false) addTweenACT.onComplete.addOnce(self.addTween);
-        }
+        },
+        inputDown: function (sprite, event) {
+            console.log(event.position.x);
+            oldX = event.position.x;
+            oldY = event.position.y;
+        },
+        inputUp: function (sprite, event) {
+            newX = event.position.x;
+            newY = event.position.y;
+            console.log((newX - oldX) + "--" + (newY - oldY));
+            if (stage == true && this.canMove && this.checkStage()) {
+                if (Math.abs(newX - oldX) > Math.abs(newY - oldY) && Math.abs(newX - oldX) > 100) {
+                    if (newX > oldX) {
+                        this.fieldGroup.sort("x", Phaser.Group.SORT_DESCENDING);
+                        this.handleMove(0, 1);
+                    } else {
+                        this.fieldGroup.sort("x", Phaser.Group.SORT_ASCENDING);
+                        this.handleMove(0, -1);
+                    }
+
+                }
+                if (Math.abs(newX - oldX) < Math.abs(newY - oldY) && Math.abs(newY - oldY) > 100) {
+                    if (newY > oldY) {
+                        this.fieldGroup.sort("y", Phaser.Group.SORT_DESCENDING);
+                        this.handleMove(1, 0);
+                    } else {
+                        this.fieldGroup.sort("y", Phaser.Group.SORT_ASCENDING);
+                        this.handleMove(-1, 0);
+                    }
+
+                }
+            }
+
+        },
+
     }
 
 }
